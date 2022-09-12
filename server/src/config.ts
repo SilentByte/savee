@@ -3,6 +3,9 @@
 // Copyright (c) 2022 SilentByte <https://silentbyte.com/>
 //
 
+import path from "path";
+import url from "url";
+
 import dotenv from "dotenv";
 
 function get(name: string, def?: string) {
@@ -20,16 +23,20 @@ function get(name: string, def?: string) {
 
 dotenv.config();
 
-const CONFIG: {
+const projectRoot = path.join(path.dirname(url.fileURLToPath(import.meta.url)), "../");
+
+const config: {
     host: string;
     port: number;
     database: string;
+    staticRoot: string;
     logLevel: string;
 } = {
     host: get("HOST", "localhost"),
     port: parseInt(get("PORT", "9000"), 10),
     database: get("DATABASE"),
+    staticRoot: get("STATIC_ROOT", path.join(projectRoot, "public")),
     logLevel: get("LOG_LEVEL", "info").toLowerCase(),
 };
 
-export default CONFIG;
+export default config;
