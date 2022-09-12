@@ -9,6 +9,7 @@ export type Timestamp = Opaque<"Timestamp", string>;
 
 export interface IAccount {
     id: Uuid;
+    avatarUrl: string;
     walletId: string;
     email: string;
     hashedPassword: string;
@@ -23,6 +24,7 @@ interface IAuthToken {
 
 export interface IMessage {
     type: "text" | "money-transfer";
+    id: Uuid;
     senderId: Uuid;
     recipientId: Uuid;
     sentOn: Timestamp;
@@ -36,6 +38,7 @@ export interface ITextMessage extends IMessage {
 export interface IMoneyTransferMessage extends IMessage {
     type: "money-transfer";
     text: string;
+    transferId: string;
     amount: number;
     currency: string;
 }

@@ -24,7 +24,7 @@ import {
 export type Key = Uuid;
 export type CompoundKey = Opaque<"CompoundKey", string>;
 
-interface IData {
+export interface IData {
     accounts: Record<Key, IAccount>;
     conversations: Record<CompoundKey, IConversation>;
 }
