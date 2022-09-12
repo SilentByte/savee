@@ -10,6 +10,7 @@ import express, {
 } from "express";
 
 import config from "./config";
+
 import {
     log,
     expressLog,
@@ -17,12 +18,16 @@ import {
 
 import * as status from "./status";
 
+import { DataBase } from "./db";
+
+const db = new DataBase(config.database);
+
 const app: Express = express();
 
 app.use(expressLog);
 app.use(express.static(config.staticRoot));
 
-app.get("/", (req: Request, res: Response) => {
+app.get("/", async (req: Request, res: Response) => {
     res
         .send("SAVEE")
         .status(status.HTTP_200_OK);

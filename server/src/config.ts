@@ -34,7 +34,7 @@ const config: {
 } = {
     host: get("HOST", "localhost"),
     port: parseInt(get("PORT", "9000"), 10),
-    database: get("DATABASE"),
+    database: get("DATABASE", path.join(projectRoot, "db.json")),
     staticRoot: get("STATIC_ROOT", path.join(projectRoot, "public")),
     logLevel: get("LOG_LEVEL", "info").toLowerCase(),
 };
