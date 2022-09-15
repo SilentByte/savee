@@ -14,19 +14,22 @@ import {
 import { v4 as uuid4 } from "uuid";
 
 import {
-    IAccount,
-    IConversation,
     Opaque,
     Timestamp,
     Uuid,
-} from "./models";
+} from "./models/common";
+
+import {
+    IAccountRecord,
+    IConversationRecord,
+} from "./models/records";
 
 export type Key = Uuid;
 export type CompoundKey = Opaque<"CompoundKey", string>;
 
 export interface IData {
-    accounts: Record<Key, IAccount>;
-    conversations: Record<CompoundKey, IConversation>;
+    accounts: Record<Key, IAccountRecord>;
+    conversations: Record<CompoundKey, IConversationRecord>;
 }
 
 class LodashAdapter<T> extends Low<T> {

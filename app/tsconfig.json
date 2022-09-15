@@ -6,6 +6,7 @@
         "jsx": "preserve",
         "importHelpers": true,
         "moduleResolution": "node",
+        "resolveJsonModule": true,
         "experimentalDecorators": true,
         "skipLibCheck": true,
         "esModuleInterop": true,
@@ -19,6 +20,9 @@
         "paths": {
             "@/*": [
                 "src/*"
+            ],
+            "@server/*": [
+                "../server/src/*"
             ]
         },
         "lib": [
@@ -33,7 +37,8 @@
         "src/**/*.tsx",
         "src/**/*.vue",
         "tests/**/*.ts",
-        "tests/**/*.tsx"
+        "tests/**/*.tsx",
+        "../server/src/**/*.ts"
     ],
     "exclude": [
         "node_modules"

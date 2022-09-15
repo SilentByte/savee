@@ -6,12 +6,12 @@
 <template>
     <v-container class="pa-0">
         <v-list class="py-0">
-            <template v-for="(a, i) in $store.accounts">
-                <v-list-item :key="a.id"
+            <template v-for="(c, i) in conversations">
+                <v-list-item :key="c.id"
                              two-line inactive
                              @click="onOpenChat">
                     <v-list-item-avatar>
-                        <v-img :src="a.avatarUrl">
+                        <v-img :src="c.recipient.avatarUrl">
                             <template v-slot:placeholder>
                                 <v-skeleton-loader type="card" />
                             </template>
@@ -20,22 +20,22 @@
 
                     <v-list-item-content>
                         <v-list-item-title>
-                            {{ a.displayName }}
+                            {{ c.recipient.displayName }}
                         </v-list-item-title>
                         <v-list-item-subtitle>
-                            {{ formatLastMessagePreview(a) }}
+                            {{ formatLastMessagePreview(c) }}
                         </v-list-item-subtitle>
                     </v-list-item-content>
 
                     <v-list-item-action>
                         <v-list-item-action-text>
-                            {{ formatLastMessageTime(a) }} {{ $store.test }}
+                            {{ formatLastMessageTime(c) }}
                         </v-list-item-action-text>
                     </v-list-item-action>
                 </v-list-item>
 
-                <v-divider v-if="i < $store.accounts.length - 1"
-                           :key="`${a.id}-divider`"
+                <v-divider v-if="i < conversations.length - 1"
+                           :key="`${c.id}-divider`"
                            inset />
             </template>
         </v-list>
@@ -44,21 +44,37 @@
 
 <script lang="ts">
 
+import { DateTime } from "luxon";
+
+import last from "lodash/last";
+
 import {
     Component,
     Vue,
 } from "vue-property-decorator";
 
+import { IConversation } from "@server/models/api";
+
 @Component
 export default class ChatView extends Vue {
-    // TODO: Implement type definition (shared with server).
-    private formatLastMessageTime(account: any) {
-        return "todo";
+    private get conversations(): IConversation[] {
+        return Object.values(this.$store._conversations);
     }
 
     // TODO: Implement type definition (shared with server).
-    private formatLastMessagePreview(account: any) {
-        return "todo";
+    private formatLastMessageTime(conversation: IConversation) {
+        const sentOn = last(conversation.messages)?.sentOn;
+
+        if(!sentOn) {
+            return "";
+        }
+
+        return DateTime.fromISO(sentOn).toRelative();
+    }
+
+    // TODO: Implement type definition (shared with server).
+    private formatLastMessagePreview(conversation: IConversation) {
+        return last(conversation.messages)?.text;
     }
 
     private onOpenChat() {

@@ -3,70 +3,60 @@
 // Copyright (c) 2022 SilentByte <https://silentbyte.com/>
 //
 
+import sortBy from "lodash/sortBy";
+import mapValues from "lodash/mapValues";
+
+import {
+    IContact,
+    IConversation,
+    Timestamp,
+    Uuid,
+} from "@server/models/api";
+
+// TODO: Replace with proper API calls.
+import * as fixture from "../../../server/db.json";
+
+const USER_ID = "00000000-0000-0000-0000-ad930cca741a";
+
+function hint<T>(o: T): T {
+    return o;
+}
+
+function contactFromFixture(o: any): IContact {
+    return {
+        id: o.id as Uuid,
+        displayName: o.displayName,
+        avatarUrl: o.avatarUrl,
+    };
+}
+
 export class Store {
-    accounts = Object.values({
-        "00000000-0000-0000-0000-ad930cca741a": {
-            "email": "rico@example.com",
-            "avatarUrl": "https://picsum.photos/id/1002/400",
-            "walletId": "????",
-            "hashedPassword": "$2b$10$XQnuu22bVLABK0xyYH2kL.U78Wafg6sId8ZvWpWv6B/7xbW/N2eYK",
-            "displayName": "Rico Beti",
-            "createdOn": "2022-09-15T22:45:07.719+08:00",
-            "id": "00000000-0000-0000-0000-ad930cca741a",
-        },
-        "00000000-0000-0000-0000-3d4fa146a359": {
-            "email": "xin@example.com",
-            "avatarUrl": "https://picsum.photos/id/1003/400",
-            "walletId": "????",
-            "hashedPassword": "$2b$10$KzG0BUGC4sJj0BTwq3LquOt4FKQnmVPKB3MwfMvU2/sf6RaSoS6Z6",
-            "displayName": "佟欣",
-            "createdOn": "2022-09-15T22:45:07.719+08:00",
-            "id": "00000000-0000-0000-0000-3d4fa146a359",
-        },
-        "00000000-0000-0000-0000-85ae086067e9": {
-            "email": "john@example.com",
-            "avatarUrl": "https://picsum.photos/id/1004/400",
-            "walletId": "????",
-            "hashedPassword": "$2b$10$0ahq.xG8jIIj2ByZAStcauMaMTjPDRa.wo1VXzOVHvvklX87acD56",
-            "displayName": "John Miller",
-            "createdOn": "2022-09-15T22:45:07.719+08:00",
-            "id": "00000000-0000-0000-0000-85ae086067e9",
-        },
-        "c5fda09b-18a8-4e4b-8514-041086f9b566": {
-            "email": "stephanie@example.com",
-            "avatarUrl": "https://picsum.photos/id/1005/400",
-            "walletId": "????",
-            "hashedPassword": "$2b$10$jbmrscKADb1PxA0S3yR9G.pxSW6osDI2XW.p52iUDkXYJ2LjOtOd.",
-            "displayName": "Stephanie Williams",
-            "createdOn": "2022-09-15T22:45:07.719+08:00",
-            "id": "c5fda09b-18a8-4e4b-8514-041086f9b566",
-        },
-        "00000000-0000-0000-0000-7ae9d0bfc8d7": {
-            "email": "maria@example.com",
-            "avatarUrl": "https://picsum.photos/id/1006/400",
-            "walletId": "????",
-            "hashedPassword": "$2b$10$W4GQtXjdQKPXTajXegzBKuZ/Fp5AUsBsBLRJ8V2xEZILN0XSX9Npy",
-            "displayName": "Maria Brown",
-            "createdOn": "2022-09-15T22:45:07.719+08:00",
-            "id": "00000000-0000-0000-0000-7ae9d0bfc8d7",
-        },
-        "00000000-0000-0000-0000-33e7b9ba9105": {
-            "email": "charlie@example.com",
-            "avatarUrl": "https://picsum.photos/id/1008/400",
-            "walletId": "????",
-            "hashedPassword": "$2b$10$Ww1/9tQPvYPDyLJsw5zmd.Hb06cz608j7pEWdzM9NZJZeDTbiS89m",
-            "displayName": "Charlie B.",
-            "createdOn": "2022-09-15T22:45:07.719+08:00",
-            "id": "00000000-0000-0000-0000-33e7b9ba9105",
-        },
-        "00000000-0000-0000-0000-a080ad23f7ef": {
-            "email": "erica@example.com",
-            "avatarUrl": "https://picsum.photos/id/1009/400",
-            "walletId": "????",
-            "hashedPassword": "$2b$10$JtlDSsVRykIr.RZfEy2gMuhvTZFNnGdrBMdUoN0QAjyRg/qoZz/Sa",
-            "displayName": "Erica Taylor",
-            "createdOn": "2022-09-15T22:45:07.719+08:00",
-            "id": "00000000-0000-0000-0000-a080ad23f7ef",
-        },
-    });
+    _profile: IContact = (o => ({
+        id: o.id as Uuid,
+        displayName: o.displayName,
+        avatarUrl: o.avatarUrl,
+    }))(fixture.accounts[USER_ID]);
+
+    _contacts: IContact[] = Object
+        .values(fixture.accounts)
+        .filter(o => o.id !== USER_ID)
+        .map(contactFromFixture);
+
+    _conversations: Record<Uuid, IConversation[]> = mapValues(fixture.conversations, o => hint<IConversation>({
+        id: o.id as Uuid,
+        recipient: contactFromFixture((fixture.accounts as any)[o.id.split(":").find(id => id !== USER_ID)!]),
+        messages: o.messages.map(m => ({
+            ...m,
+            isAccepted: true,
+        })) as any,
+        createdOn: o.createdOn as Timestamp,
+    }));
+
+    key(parts: string[]): string {
+        return sortBy(parts).join(":");
+    }
+
+    contactById(id: Uuid): IContact | null {
+        return this._contacts.find(c => c.id === id) || null;
+    }
 }

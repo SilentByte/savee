@@ -3,11 +3,12 @@
 // Copyright (c) 2022 SilentByte <https://silentbyte.com/>
 //
 
-export type Opaque<K, T> = T & { __TYPE__: K };
-export type Uuid = Opaque<"Uuid", string>;
-export type Timestamp = Opaque<"Timestamp", string>;
+import {
+    Uuid,
+    Timestamp,
+} from "./common";
 
-export interface IAccount {
+export interface IAccountRecord {
     id: Uuid;
     avatarUrl: string;
     walletId: string;
@@ -17,13 +18,13 @@ export interface IAccount {
     createdOn: Timestamp;
 }
 
-interface IAuthToken {
+interface IAuthTokenRecord {
     userId: Uuid;
     token: string;
     createdOn: Timestamp;
 }
 
-export interface IMessage {
+export interface IMessageRecord {
     type: "text" | "money-transfer";
     id: Uuid;
     senderId: Uuid;
@@ -31,12 +32,12 @@ export interface IMessage {
     sentOn: Timestamp;
 }
 
-export interface ITextMessage extends IMessage {
+export interface ITextMessageRecord extends IMessageRecord {
     type: "text",
     text: string;
 }
 
-export interface IMoneyTransferMessage extends IMessage {
+export interface IMoneyTransferMessageRecord extends IMessageRecord {
     type: "money-transfer";
     text: string;
     transferId: string;
@@ -44,9 +45,9 @@ export interface IMoneyTransferMessage extends IMessage {
     currency: string;
 }
 
-export type CombinedMessage = ITextMessage | IMoneyTransferMessage;
+export type CombinedMessageRecord = ITextMessageRecord | IMoneyTransferMessageRecord;
 
-export interface IConversation {
+export interface IConversationRecord {
     createdOn: Timestamp;
-    messages: CombinedMessage[];
+    messages: CombinedMessageRecord[];
 }

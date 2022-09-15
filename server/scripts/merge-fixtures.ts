@@ -18,11 +18,15 @@ import {
 } from "../src/db";
 
 import {
-    IAccount,
-    IConversation, IMoneyTransferMessage,
-    ITextMessage,
     Timestamp,
-} from "../src/models";
+} from "../src/models/common";
+
+import {
+    IAccountRecord,
+    IConversationRecord,
+    IMoneyTransferMessageRecord,
+    ITextMessageRecord,
+} from "../src/models/records";
 
 function hint<T>(o: T): T {
     return o;
@@ -57,7 +61,7 @@ const now = DateTime.now().toISO() as Timestamp;
 
 const fixtures: IData = {
     accounts: {
-        ...o<IAccount>("00000000-0000-0000-0000-ad930cca741a", {
+        ...o<IAccountRecord>("00000000-0000-0000-0000-ad930cca741a", {
             email: "rico@example.com",
             avatarUrl: av(1002),
             walletId: "????",
@@ -66,7 +70,7 @@ const fixtures: IData = {
             createdOn: now,
         }),
 
-        ...o<IAccount>("00000000-0000-0000-0000-3d4fa146a359", {
+        ...o<IAccountRecord>("00000000-0000-0000-0000-3d4fa146a359", {
             email: "xin@example.com",
             avatarUrl: av(1003),
             walletId: "????",
@@ -75,7 +79,7 @@ const fixtures: IData = {
             createdOn: now,
         }),
 
-        ...o<IAccount>("00000000-0000-0000-0000-85ae086067e9", {
+        ...o<IAccountRecord>("00000000-0000-0000-0000-85ae086067e9", {
             email: "john@example.com",
             avatarUrl: av(1004),
             walletId: "????",
@@ -84,7 +88,7 @@ const fixtures: IData = {
             createdOn: now,
         }),
 
-        ...o<IAccount>("c5fda09b-18a8-4e4b-8514-041086f9b566", {
+        ...o<IAccountRecord>("c5fda09b-18a8-4e4b-8514-041086f9b566", {
             email: "stephanie@example.com",
             avatarUrl: av(1005),
             walletId: "????",
@@ -93,7 +97,7 @@ const fixtures: IData = {
             createdOn: now,
         }),
 
-        ...o<IAccount>("00000000-0000-0000-0000-7ae9d0bfc8d7", {
+        ...o<IAccountRecord>("00000000-0000-0000-0000-7ae9d0bfc8d7", {
             email: "maria@example.com",
             avatarUrl: av(1006),
             walletId: "????",
@@ -102,7 +106,7 @@ const fixtures: IData = {
             createdOn: now,
         }),
 
-        ...o<IAccount>("00000000-0000-0000-0000-33e7b9ba9105", {
+        ...o<IAccountRecord>("00000000-0000-0000-0000-33e7b9ba9105", {
             email: "charlie@example.com",
             avatarUrl: av(1008),
             walletId: "????",
@@ -111,7 +115,7 @@ const fixtures: IData = {
             createdOn: now,
         }),
 
-        ...o<IAccount>("00000000-0000-0000-0000-a080ad23f7ef", {
+        ...o<IAccountRecord>("00000000-0000-0000-0000-a080ad23f7ef", {
             email: "erica@example.com",
             avatarUrl: av(1009),
             walletId: "????",
@@ -121,9 +125,9 @@ const fixtures: IData = {
         }),
     },
     conversations: {
-        ...o<IConversation>(ck("00000000-0000-0000-0000-ad930cca741a", "00000000-0000-0000-0000-3d4fa146a359"), {
+        ...o<IConversationRecord>(ck("00000000-0000-0000-0000-ad930cca741a", "00000000-0000-0000-0000-3d4fa146a359"), {
             messages: [
-                hint<ITextMessage>({
+                hint<ITextMessageRecord>({
                     type: "text",
                     id: k("00000000-0000-0000-0000-ec514dd3dbc5"),
                     senderId: k("00000000-0000-0000-0000-ad930cca741a"),
@@ -131,7 +135,7 @@ const fixtures: IData = {
                     text: "Hey Xin, how's it going? Happy Birthday! 🎂",
                     sentOn: now,
                 }),
-                hint<IMoneyTransferMessage>({
+                hint<IMoneyTransferMessageRecord>({
                     type: "money-transfer",
                     id: k("00000000-0000-0000-0000-6b2ff150eae6"),
                     senderId: k("00000000-0000-0000-0000-ad930cca741a"),
@@ -142,7 +146,7 @@ const fixtures: IData = {
                     currency: "AUD",
                     sentOn: now,
                 }),
-                hint<ITextMessage>({
+                hint<ITextMessageRecord>({
                     type: "text",
                     id: k("00000000-0000-0000-0000-64ac99719475"),
                     senderId: k("00000000-0000-0000-0000-3d4fa146a359"),
