@@ -62,6 +62,7 @@ const fixtures: IData = {
             avatarUrl: av(1002),
             walletId: "????",
             hashedPassword: pw("rico"),
+            displayName: "Rico Beti",
             createdOn: now,
         }),
 
@@ -70,6 +71,7 @@ const fixtures: IData = {
             avatarUrl: av(1003),
             walletId: "????",
             hashedPassword: pw("xin"),
+            displayName: "佟欣",
             createdOn: now,
         }),
 
@@ -78,38 +80,43 @@ const fixtures: IData = {
             avatarUrl: av(1004),
             walletId: "????",
             hashedPassword: pw("john"),
+            displayName: "John Miller",
             createdOn: now,
         }),
 
-        ...o<IAccount>("00000000-0000-0000-0000-3d4fa146a359", {
-            email: "john@example.com",
-            avatarUrl: av(1004),
+        ...o<IAccount>("c5fda09b-18a8-4e4b-8514-041086f9b566", {
+            email: "stephanie@example.com",
+            avatarUrl: av(1005),
             walletId: "????",
-            hashedPassword: pw("john"),
+            hashedPassword: pw("stephanie"),
+            displayName: "Stephanie Williams",
             createdOn: now,
         }),
 
         ...o<IAccount>("00000000-0000-0000-0000-7ae9d0bfc8d7", {
             email: "maria@example.com",
-            avatarUrl: av(1005),
+            avatarUrl: av(1006),
             walletId: "????",
             hashedPassword: pw("maria"),
+            displayName: "Maria Brown",
             createdOn: now,
         }),
 
         ...o<IAccount>("00000000-0000-0000-0000-33e7b9ba9105", {
             email: "charlie@example.com",
-            avatarUrl: av(1006),
+            avatarUrl: av(1008),
             walletId: "????",
-            hashedPassword: pw("maria"),
+            hashedPassword: pw("charlie"),
+            displayName: "Charlie B.",
             createdOn: now,
         }),
 
         ...o<IAccount>("00000000-0000-0000-0000-a080ad23f7ef", {
             email: "erica@example.com",
-            avatarUrl: av(1007),
+            avatarUrl: av(1009),
             walletId: "????",
-            hashedPassword: pw("maria"),
+            hashedPassword: pw("erica"),
+            displayName: "Erica Taylor",
             createdOn: now,
         }),
     },

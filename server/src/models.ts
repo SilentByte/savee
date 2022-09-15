@@ -13,6 +13,7 @@ export interface IAccount {
     walletId: string;
     email: string;
     hashedPassword: string;
+    displayName: string;
     createdOn: Timestamp;
 }
 

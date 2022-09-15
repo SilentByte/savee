@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "nodemon --watch 'src/**' --ext 'ts,json' --exec 'ts-node --esm --experimental-specifier-resolution=node main.ts'",
     "run": "ts-node --esm --experimental-specifier-resolution=node main.ts",
-    "commit-fixtures": "ts-node --esm --experimental-specifier-resolution=node scripts/merge-fixtures.ts"
+    "merge-fixtures": "ts-node --esm --experimental-specifier-resolution=node scripts/merge-fixtures.ts"
   },
   "author": "",
   "license": "ISC",
