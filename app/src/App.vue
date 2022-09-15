@@ -4,13 +4,17 @@
 -->
 
 <template>
-    <v-app>
+    <!-- TODO: Toggle depending on loading logic. -->
+    <v-app v-if="false">
+        <SplashView />
+    </v-app>
+    <v-app v-else>
         <v-app-bar app dark hide-on-scroll
                    color="primary">
             <div class="d-flex align-center">
                 <img height="24"
                      src="@/assets/brand.svg"
-                     alt="savee" />
+                     alt="Savee" />
             </div>
 
             <v-spacer />
@@ -82,8 +86,13 @@ import {
     Component,
     Vue,
 } from "vue-property-decorator";
+import SplashView from "@/views/SplashView.vue";
 
-@Component
+@Component({
+    components: {
+        SplashView,
+    },
+})
 export default class App extends Vue {
     //
 }
@@ -91,8 +100,6 @@ export default class App extends Vue {
 </script>
 
 <style lang="scss">
-
-@import "~@/styles/variables";
 
 .route-title {
     margin-left: 30px;
