@@ -8,6 +8,7 @@ import App from "@/App.vue";
 import router from "@/router";
 
 import vuetify from "@/plugins/vuetify";
+import "@/plugins/store"
 
 import "roboto-fontface/css/roboto/roboto-fontface.css";
 import "@fontsource/quicksand";
