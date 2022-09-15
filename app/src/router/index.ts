@@ -20,16 +20,33 @@ const routes: Array<RouteConfig> = [
         path: "/chat",
         name: "chat",
         component: ChatView,
+        meta: {
+            title: "Chat",
+        },
     },
     {
         path: "/feed",
         name: "feed",
         component: () => import(/* webpackChunkName: "feed" */ "@/views/FeedView.vue"),
+        meta: {
+            title: "Feed",
+        },
+    },
+    {
+        path: "/pay",
+        name: "pay",
+        component: () => import(/* webpackChunkName: "pay" */ "@/views/PayView.vue"),
+        meta: {
+            title: "Pay",
+        },
     },
     {
         path: "/about",
         name: "about",
         component: () => import(/* webpackChunkName: "about" */ "@/views/AboutView.vue"),
+        meta: {
+            title: "About",
+        },
     },
 ];
 
@@ -37,6 +54,11 @@ const router = new VueRouter({
     mode: "history",
     base: process.env.BASE_URL,
     routes,
+});
+
+router.beforeEach((to, from, next) => {
+    document.title = `${to.meta?.title} | ${process.env.VUE_APP_TITLE}`;
+    next();
 });
 
 export default router;

@@ -6,8 +6,8 @@
 <template>
     <v-container>
         <v-row>
-            <v-col cols="12">
-                SAVEE
+            <v-col v-for="i in 20" :key="i" cols="12">
+                CHAT {{ i }}
             </v-col>
         </v-row>
     </v-container>

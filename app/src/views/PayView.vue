@@ -7,7 +7,7 @@
     <v-container>
         <v-row>
             <v-col cols="12">
-                FEED
+                PAY
             </v-col>
         </v-row>
     </v-container>
@@ -21,7 +21,7 @@ import {
 } from "vue-property-decorator";
 
 @Component
-export default class FeedView extends Vue {
+export default class PayView extends Vue {
     //
 }
 
