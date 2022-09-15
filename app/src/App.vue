@@ -33,6 +33,10 @@
                     </v-btn>
                 </template>
                 <v-list>
+                    <v-list-item @click="onToggleFullscreen">
+                        <v-list-item-title>Toggle Fullscreen</v-list-item-title>
+                    </v-list-item>
+
                     <v-list-item to="about">
                         <v-list-item-title>About</v-list-item-title>
                     </v-list-item>
@@ -86,6 +90,9 @@ import {
     Component,
     Vue,
 } from "vue-property-decorator";
+
+import * as fullscreen from "@/modules/fullscreen";
+
 import SplashView from "@/views/SplashView.vue";
 
 @Component({
@@ -94,7 +101,13 @@ import SplashView from "@/views/SplashView.vue";
     },
 })
 export default class App extends Vue {
-    //
+    private onToggleFullscreen() {
+        if(fullscreen.isFullscreen()) {
+            fullscreen.tryExitFullscreen();
+        } else {
+            fullscreen.tryEnterFullscreen();
+        }
+    }
 }
 
 </script>
