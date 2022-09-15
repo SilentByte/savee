@@ -44,12 +44,12 @@
 
         <v-bottom-navigation app fixed grow mandatory>
             <v-btn text
-                   to="feed"
+                   to="discover"
                    color="primary"
                    height="100%">
                 <span>Discover</span>
 
-                <v-icon v-if="$route.name === 'feed'">mdi-compass</v-icon>
+                <v-icon v-if="$route.name === 'discover'">mdi-compass</v-icon>
                 <v-icon v-else>mdi-compass-outline</v-icon>
             </v-btn>
 

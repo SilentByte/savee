@@ -25,11 +25,11 @@ const routes: Array<RouteConfig> = [
         },
     },
     {
-        path: "/feed",
-        name: "feed",
-        component: () => import(/* webpackChunkName: "feed" */ "@/views/FeedView.vue"),
+        path: "/discover",
+        name: "discover",
+        component: () => import(/* webpackChunkName: "discover" */ "@/views/DiscoverView.vue"),
         meta: {
-            title: "Feed",
+            title: "Discover",
         },
     },
     {

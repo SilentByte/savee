@@ -21,7 +21,7 @@ import {
 } from "vue-property-decorator";
 
 @Component
-export default class FeedView extends Vue {
+export default class DiscoverView extends Vue {
     //
 }
 
