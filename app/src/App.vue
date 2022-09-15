@@ -92,6 +92,8 @@ export default class App extends Vue {
 
 <style lang="scss">
 
+@import "~@/styles/variables";
+
 .route-title {
     margin-left: 30px;
     font-size: 16px;
