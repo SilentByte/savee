@@ -1,0 +1,18 @@
+//
+// SAVEE SUPER APP
+// Copyright (c) 2022 SilentByte <https://silentbyte.com/>
+//
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(white, 0);
+        transform: scale(1.07);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(white, 0);
+        transform: scale(1);
+    }
+}

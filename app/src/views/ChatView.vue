@@ -9,7 +9,7 @@
             <template v-for="(c, i) in conversations">
                 <v-list-item :key="c.id"
                              two-line inactive
-                             @click="onOpenChat">
+                             @click="onOpenConversation(c)">
                     <v-list-item-avatar>
                         <v-img :src="c.recipient.avatarUrl">
                             <template v-slot:placeholder>
@@ -77,8 +77,8 @@ export default class ChatView extends Vue {
         return last(conversation.messages)?.text;
     }
 
-    private onOpenChat() {
-        //
+    private onOpenConversation(conversation: IConversation) {
+        console.log(conversation)
     }
 }
 

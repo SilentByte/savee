@@ -4,16 +4,57 @@
 -->
 
 <template>
-    <v-container>
+    <v-container fluid>
         <v-row>
+            <v-col cols="12"
+                   class="pa-10 text-center">
+                <v-btn class="pay-button"
+                       color="primary">
+                    <v-row dense>
+                        <v-col cols="12">
+                            <v-icon size="40">mdi-currency-usd</v-icon>
+                        </v-col>
+                        <v-col cols="12">
+                            PAY NOW
+                        </v-col>
+                    </v-row>
+                </v-btn>
+            </v-col>
+
             <v-col cols="12">
-                PAY
+                <v-divider />
+            </v-col>
+
+            <v-col cols="12">
+                <v-list two-line>
+                    <v-list-item v-for="p in payments" :key="p.id">
+                        <v-list-item-avatar>
+                            <v-img :src="p.recipient.avatarUrl" />
+                        </v-list-item-avatar>
+
+                        <v-list-item-content>
+                            <v-list-item-title>
+                                {{ p.recipient.displayName }}
+                            </v-list-item-title>
+                            <v-list-item-subtitle class="text-caption"
+                                                  :title="p.paidOnDT.toLocaleString()">
+                                {{ p.paidOnDT.toRelative() }}
+                            </v-list-item-subtitle>
+                        </v-list-item-content>
+
+                        <v-list-item-action-text>
+                            {{ p.currency }} {{ p.amount }}
+                        </v-list-item-action-text>
+                    </v-list-item>
+                </v-list>
             </v-col>
         </v-row>
     </v-container>
 </template>
 
 <script lang="ts">
+
+import { DateTime } from "luxon";
 
 import {
     Component,
@@ -22,7 +63,30 @@ import {
 
 @Component
 export default class PayView extends Vue {
-    //
+    private get payments() {
+        return this.$store
+            ._payments
+            .map(p => ({
+                ...p,
+                paidOnDT: DateTime.fromISO(p.paidOn),
+            }))
+            .sort((lhs, rhs) => lhs.paidOnDT.toMillis() - rhs.paidOnDT.toMillis());
+    }
 }
 
 </script>
+
+<style lang="scss">
+
+@import "~@/styles/variables";
+
+.pay-button {
+    width: 140px !important;
+    height: 140px !important;
+    border-radius: 9999px;
+
+    animation: pulse 2s infinite;
+    box-shadow: 0 0 0 0 rgba($primary-color, 1);
+}
+
+</style>

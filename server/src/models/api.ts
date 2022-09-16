@@ -49,3 +49,19 @@ export interface IConversation {
     messages: CombinedMessage[];
     createdOn: Timestamp;
 }
+
+export interface IPayment {
+    id: Uuid;
+    recipient: IContact;
+    currency: string;
+    amount: number;
+    paidOn: Timestamp;
+    items: IPaymentItem[];
+}
+
+export interface IPaymentItem {
+    id: Uuid;
+    name: string;
+    quantity: number;
+    amount: number;
+}

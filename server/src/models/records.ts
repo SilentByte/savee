@@ -15,10 +15,28 @@ export interface IAccountRecord {
     email: string;
     hashedPassword: string;
     displayName: string;
+    payments: IPaymentRecord[];
     createdOn: Timestamp;
 }
 
-interface IAuthTokenRecord {
+export interface IPaymentRecord {
+    id: Uuid;
+    recipientId: Uuid;
+    currency: string;
+    amount: number;
+    paidOn: Timestamp;
+    items: IPaymentItemRecord[];
+    totalAmount: number;
+}
+
+export interface IPaymentItemRecord {
+    id: Uuid;
+    name: string;
+    quantity: number;
+    amount: number;
+}
+
+export interface IAuthTokenRecord {
     userId: Uuid;
     token: string;
     createdOn: Timestamp;

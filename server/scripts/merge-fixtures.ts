@@ -19,6 +19,7 @@ import {
 
 import {
     Timestamp,
+    Uuid,
 } from "../src/models/common";
 
 import {
@@ -49,7 +50,7 @@ function o<T>(id: string, data: Omit<T, "id">): { [id: string]: T } {
         [id]: {
             ...data,
             id: id as Key,
-        } as T,
+        } as unknown as T,
     };
 }
 
@@ -67,6 +68,17 @@ const fixtures: IData = {
             walletId: "????",
             hashedPassword: pw("rico"),
             displayName: "Rico Beti",
+            payments: [
+                {
+                    id: "57db135d-7373-4061-9aaa-be983a1d13a2" as Uuid,
+                    recipientId: "00000000-0000-0000-0000-3d4fa146a359" as Uuid,
+                    currency: "AUD",
+                    amount: 12.55,
+                    paidOn: now,
+                    items: [],
+                    totalAmount: 12.55,
+                },
+            ],
             createdOn: now,
         }),
 
@@ -76,6 +88,7 @@ const fixtures: IData = {
             walletId: "????",
             hashedPassword: pw("xin"),
             displayName: "佟欣",
+            payments: [],
             createdOn: now,
         }),
 
@@ -85,6 +98,7 @@ const fixtures: IData = {
             walletId: "????",
             hashedPassword: pw("john"),
             displayName: "John Miller",
+            payments: [],
             createdOn: now,
         }),
 
@@ -94,6 +108,7 @@ const fixtures: IData = {
             walletId: "????",
             hashedPassword: pw("stephanie"),
             displayName: "Stephanie Williams",
+            payments: [],
             createdOn: now,
         }),
 
@@ -103,6 +118,7 @@ const fixtures: IData = {
             walletId: "????",
             hashedPassword: pw("maria"),
             displayName: "Maria Brown",
+            payments: [],
             createdOn: now,
         }),
 
@@ -112,6 +128,7 @@ const fixtures: IData = {
             walletId: "????",
             hashedPassword: pw("charlie"),
             displayName: "Charlie B.",
+            payments: [],
             createdOn: now,
         }),
 
@@ -121,6 +138,7 @@ const fixtures: IData = {
             walletId: "????",
             hashedPassword: pw("erica"),
             displayName: "Erica Taylor",
+            payments: [],
             createdOn: now,
         }),
     },

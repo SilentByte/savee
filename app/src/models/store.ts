@@ -9,6 +9,7 @@ import mapValues from "lodash/mapValues";
 import {
     IContact,
     IConversation,
+    IPayment,
     Timestamp,
     Uuid,
 } from "@server/models/api";
@@ -50,6 +51,16 @@ export class Store {
             isAccepted: true,
         })) as any,
         createdOn: o.createdOn as Timestamp,
+    }));
+
+    _payments: IPayment[] = fixture.accounts[USER_ID].payments.map(p => ({
+        id: p.id as Uuid,
+        avatarUrl: p.avatarUrl,
+        recipient: this._contacts.find(c => c.id === p.recipientId)!,
+        currency: p.currency,
+        amount: p.amount,
+        paidOn: p.paidOn as Timestamp,
+        items: [],
     }));
 
     key(parts: string[]): string {
