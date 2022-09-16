@@ -31,7 +31,45 @@ function contactFromFixture(o: any): IContact {
     };
 }
 
+export interface IAppMessageDialogCustomAction {
+    action: string;
+    text: string;
+    prepend?: boolean;
+    color?: string;
+}
+
+export type AppMessageDialogType = "success" | "info" | "warning" | "error";
+
+export type AppMessageDialogAction =
+    "ok"
+    | "yes"
+    | "no"
+    | "cancel"
+    | "save"
+    | "discard"
+    | "delete"
+    | "reset"
+    | "abort"
+    | IAppMessageDialogCustomAction
+    | string;
+
+export interface IAppMessageDialogState {
+    visible: boolean;
+    text?: string;
+    type?: AppMessageDialogType;
+    color?: string;
+    icon?: string;
+    actions?: AppMessageDialogAction[];
+    defaultAction?: AppMessageDialogAction;
+    resolve?: (action: AppMessageDialogAction) => void;
+}
+
 export class Store {
+    appMessageDialog: IAppMessageDialogState = {
+        visible: false,
+        text: "",
+    };
+
     _profile: IContact = (o => ({
         id: o.id as Uuid,
         displayName: o.displayName,
@@ -69,5 +107,38 @@ export class Store {
 
     contactById(id: Uuid): IContact | null {
         return this._contacts.find(c => c.id === id) || null;
+    }
+
+    async showMessageDialog(payload: {
+        text: string;
+        actions: AppMessageDialogAction[];
+        defaultAction: AppMessageDialogAction;
+        type?: AppMessageDialogType;
+        icon?: string;
+        color?: string;
+    }): Promise<AppMessageDialogAction> {
+        let resolve: any = null;
+        const promise = new Promise<AppMessageDialogAction>(r => {
+            resolve = r;
+        });
+
+        this.appMessageDialog = {
+            visible: true,
+            text: payload.text,
+            actions: payload.actions,
+            defaultAction: payload.defaultAction,
+            type: payload.type,
+            icon: payload.icon,
+            color: payload.color,
+            resolve,
+        };
+
+        const action = await promise;
+
+        this.appMessageDialog = {
+            visible: false,
+        };
+
+        return action;
     }
 }

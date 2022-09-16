@@ -9,7 +9,8 @@
             <v-col cols="12"
                    class="pa-10 text-center">
                 <v-btn class="pay-button"
-                       color="primary">
+                       color="primary"
+                       @click="onPay">
                     <v-row dense>
                         <v-col cols="12">
                             <v-icon size="40">mdi-currency-usd</v-icon>
@@ -71,6 +72,14 @@ export default class PayView extends Vue {
                 paidOnDT: DateTime.fromISO(p.paidOn),
             }))
             .sort((lhs, rhs) => lhs.paidOnDT.toMillis() - rhs.paidOnDT.toMillis());
+    }
+
+    private onPay() {
+        this.$store.showMessageDialog({
+            text: "TODO",
+            actions: ["ok"],
+            defaultAction: "ok",
+        });
     }
 }
 

@@ -81,6 +81,7 @@
             </v-btn>
         </v-bottom-navigation>
 
+        <AppMessageDialog />
     </v-app>
 </template>
 
@@ -93,10 +94,12 @@ import {
 
 import * as fullscreen from "@/modules/fullscreen";
 
-import SplashView from "@/views/SplashView.vue";
+import SplashView from "@/ui/views/SplashView.vue";
+import AppMessageDialog from "@/ui/dialogs/AppMessageDialog.vue";
 
 @Component({
     components: {
+        AppMessageDialog,
         SplashView,
     },
 })

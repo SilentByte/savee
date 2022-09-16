@@ -6,7 +6,7 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 
-import ChatView from "@/views/ChatView.vue";
+import ChatView from "@/ui/views/ChatView.vue";
 
 Vue.use(VueRouter);
 
@@ -27,7 +27,7 @@ const routes: Array<RouteConfig> = [
     {
         path: "/discover",
         name: "discover",
-        component: () => import(/* webpackChunkName: "discover" */ "@/views/DiscoverView.vue"),
+        component: () => import(/* webpackChunkName: "discover" */ "@/ui/views/DiscoverView.vue"),
         meta: {
             title: "Discover",
         },
@@ -35,7 +35,7 @@ const routes: Array<RouteConfig> = [
     {
         path: "/pay",
         name: "pay",
-        component: () => import(/* webpackChunkName: "pay" */ "@/views/PayView.vue"),
+        component: () => import(/* webpackChunkName: "pay" */ "@/ui/views/PayView.vue"),
         meta: {
             title: "Pay",
         },
@@ -43,7 +43,7 @@ const routes: Array<RouteConfig> = [
     {
         path: "/about",
         name: "about",
-        component: () => import(/* webpackChunkName: "about" */ "@/views/AboutView.vue"),
+        component: () => import(/* webpackChunkName: "about" */ "@/ui/views/AboutView.vue"),
         meta: {
             title: "About",
         },
