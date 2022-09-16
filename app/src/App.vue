@@ -19,7 +19,7 @@
 
             <v-spacer />
 
-            <v-btn icon>
+            <v-btn icon disabled>
                 <v-icon>mdi-magnify</v-icon>
             </v-btn>
 
@@ -46,7 +46,9 @@
 
         <v-main>
             <v-fade-transition leave-absolute>
-                <router-view />
+                <keep-alive>
+                    <router-view />
+                </keep-alive>
             </v-fade-transition>
         </v-main>
 

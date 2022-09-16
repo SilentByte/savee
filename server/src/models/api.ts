@@ -14,6 +14,27 @@ export {
     Timestamp,
 } from "./common";
 
+export interface IFeedItem {
+    id: Uuid;
+    provider: IContact;
+    photoUrls: string[];
+    price: number;
+    currency: string;
+    description: string;
+    likeCounter: number;
+    isLiked: boolean;
+    isBookmarked: boolean;
+    comments: IFeedComment[];
+    createdOn: Timestamp;
+}
+
+export interface IFeedComment {
+    id: Uuid;
+    displayName: string;
+    text: string;
+    postedOn: Timestamp;
+}
+
 export interface IContact {
     id: Uuid;
     displayName: string;

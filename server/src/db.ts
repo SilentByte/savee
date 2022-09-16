@@ -22,12 +22,14 @@ import {
 import {
     IAccountRecord,
     IConversationRecord,
+    IProductRecord,
 } from "./models/records";
 
 export type Key = Uuid;
 export type CompoundKey = Opaque<"CompoundKey", string>;
 
 export interface IData {
+    products: Record<string, IProductRecord>;
     accounts: Record<Key, IAccountRecord>;
     conversations: Record<CompoundKey, IConversationRecord>;
 }
@@ -69,6 +71,7 @@ export class DataBase {
             await this.adapter.read();
 
             this.adapter.data ||= {
+                products: {},
                 accounts: {},
                 conversations: {},
             };

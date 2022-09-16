@@ -8,6 +8,27 @@ import {
     Timestamp,
 } from "./common";
 
+export interface IProductRecord {
+    id: Uuid;
+    name: string;
+    providerId: Uuid;
+    photoUrls: string[];
+    price: number;
+    currency: string;
+    description: string;
+    likeCounter: number;
+    isLiked: boolean;
+    isBookmarked: boolean;
+    createdOn: Timestamp;
+}
+
+export interface ICommentRecord {
+    id: Uuid;
+    displayName: string;
+    text: string;
+    postedOn: Timestamp;
+}
+
 export interface IAccountRecord {
     id: Uuid;
     avatarUrl: string;

@@ -26,6 +26,7 @@ import {
     IAccountRecord,
     IConversationRecord,
     IMoneyTransferMessageRecord,
+    IProductRecord,
     ITextMessageRecord,
 } from "../src/models/records";
 
@@ -61,6 +62,40 @@ function pw(password: string): string {
 const now = DateTime.now().toISO() as Timestamp;
 
 const fixtures: IData = {
+    products: {
+        ...o<IProductRecord>("303cd996-4e3f-4cee-95e3-b1ba098e9d49", {
+            name: "Fancy Shoes",
+            providerId: "00000000-0000-0000-0000-85ae086067e9" as Uuid,
+            photoUrls: [
+                "https://images.unsplash.com/photo-1521001750463-5f3e18f2da2d?auto=format&fit=crop&w=1080&q=80",
+                "https://images.unsplash.com/photo-1520902980812-1e65704af11e?auto=format&fit=crop&w=1080&q=80",
+            ],
+            price: 199,
+            currency: "USD",
+            description: "These are some fancy shoes! 🥾",
+            likeCounter: 283,
+            isLiked: false,
+            isBookmarked: false,
+            createdOn: now,
+        }),
+
+        ...o<IProductRecord>("d303ff54-f3d4-49a9-8193-76e0cb7cb60d", {
+            name: "Hat Collection",
+            providerId: "00000000-0000-0000-0000-85ae086067e9" as Uuid,
+            photoUrls: [
+                "https://images.unsplash.com/photo-1566333450073-4638cdc76e18?auto=format&fit=crop&w=1080&q=80",
+                "https://images.unsplash.com/photo-1617816989547-b129bcde3b3a?auto=format&fit=crop&w=1080&q=80",
+                "https://images.unsplash.com/photo-1578421954862-b6ce7dc7a70a?auto=format&fit=crop&w=1080&q=80",
+            ],
+            price: 54.99,
+            currency: "USD",
+            description: "Introducing the newest members in our hat collection.",
+            likeCounter: 54,
+            isLiked: false,
+            isBookmarked: false,
+            createdOn: now,
+        }),
+    },
     accounts: {
         ...o<IAccountRecord>("00000000-0000-0000-0000-ad930cca741a", {
             email: "rico@example.com",

@@ -8,7 +8,8 @@ import mapValues from "lodash/mapValues";
 
 import {
     IContact,
-    IConversation,
+    IConversation, IFeedComment,
+    IFeedItem,
     IPayment,
     Timestamp,
     Uuid,
@@ -69,6 +70,20 @@ export class Store {
         visible: false,
         text: "",
     };
+
+    _feed: IFeedItem[] = Object.values(fixture.products).map(p => ({
+        id: p.id as Uuid,
+        provider: contactFromFixture((fixture.accounts as any)[p.providerId]),
+        photoUrls: p.photoUrls,
+        price: p.price,
+        currency: p.currency,
+        description: p.description,
+        likeCounter: p.likeCounter,
+        isLiked: p.isLiked,
+        isBookmarked: p.isBookmarked,
+        comments: [],
+        createdOn: p.createdOn as Timestamp,
+    }));
 
     _profile: IContact = (o => ({
         id: o.id as Uuid,

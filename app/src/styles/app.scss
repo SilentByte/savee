@@ -7,7 +7,23 @@
 @import "vuetify";
 @import "animations";
 
+body {
+    overflow-x: hidden;
+}
+
 h1, h2, h3, h4, h5, h6 {
     font-family: $fancy-font-family;
     font-weight: lighter;
+}
+
+.text-fancy {
+    font-family: $fancy-font-family;
+}
+
+.text-primary {
+    color: $primary-color;
+}
+
+.text-secondary {
+    color: $secondary-color;
 }
