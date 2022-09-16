@@ -50,7 +50,7 @@
             </v-fade-transition>
         </v-main>
 
-        <v-bottom-navigation app fixed grow mandatory>
+        <v-bottom-navigation app fixed grow>
             <v-btn text
                    to="discover"
                    color="primary"

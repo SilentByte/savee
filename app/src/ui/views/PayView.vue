@@ -27,7 +27,9 @@
             </v-col>
 
             <v-col cols="12">
-                <v-list two-line>
+                <v-subheader>Prior Transactions</v-subheader>
+                <v-list two-line
+                        class="py-0">
                     <v-list-item v-for="p in payments" :key="p.id">
                         <v-list-item-avatar>
                             <v-img :src="p.recipient.avatarUrl" />
