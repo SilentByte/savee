@@ -45,6 +45,31 @@
                     <v-row dense>
                         <v-col v-for="message in model.conversation.messages" :key="message.id"
                                cols="12">
+                            <div v-if="message.type === 'money-transfer'"
+                                 :class="{
+                                    'chat-message-gift': true,
+                                    'self': isMessageFromSelf(message),
+                                    'other': !isMessageFromSelf(message),
+                                 }">
+                                <v-btn icon
+                                       class="mb-2 gift-button"
+                                       color="info"
+                                       width="120"
+                                       height="120">
+                                    <v-avatar tile
+                                              size="100">
+                                        <v-img src="@/assets/gift.svg" />
+                                    </v-avatar>
+
+                                    <div style="position: absolute; bottom: -10px">
+                                        <v-chip small
+                                                color="primary">
+                                            {{ $format.currency(message.currency, message.amount) }}
+                                        </v-chip>
+                                    </div>
+                                </v-btn>
+                            </div>
+
                             <div class="d-flex">
                                 <template v-if="!isMessageFromSelf(message)">
                                     <v-avatar class="me-2"
@@ -260,6 +285,16 @@ $chat-message-offset: 64px;
     margin-left: 48px;
 }
 
+.chat-message-gift.self {
+    text-align: right;
+    margin-right: 48px;
+}
+
+.chat-message-gift.other {
+    text-align: left;
+    margin-left: 48px;
+}
+
 .reply-body {
     background-color: $lighter-background-color;
 }
@@ -271,6 +306,11 @@ $chat-message-offset: 64px;
         overflow: auto;
         max-height: calc(3em + 36px) !important;
     }
+}
+
+.gift-button {
+    animation: pulse 2s infinite;
+    box-shadow: 0 0 0 0 rgba($info-color, 1);
 }
 
 </style>

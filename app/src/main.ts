@@ -9,6 +9,7 @@ import router from "@/router";
 
 import vuetify from "@/plugins/vuetify";
 import "@/plugins/store";
+import "@/plugins/format";
 
 import "roboto-fontface/css/roboto/roboto-fontface.css";
 import "@fontsource/quicksand";
