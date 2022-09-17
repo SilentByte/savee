@@ -117,7 +117,7 @@ export default class App extends Vue {
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
 .route-title {
     margin-left: 30px;

@@ -6,6 +6,7 @@
 @import "variables";
 @import "vuetify";
 @import "animations";
+@import "transitions";
 
 body {
     overflow-x: hidden;
@@ -26,4 +27,15 @@ h1, h2, h3, h4, h5, h6 {
 
 .text-secondary {
     color: $secondary-color;
+}
+
+.text-disabled {
+    color: rgba(0, 0, 0, 0.38);
+}
+
+.debug {
+    white-space: pre-wrap;
+    font-family: monospace;
+    font-size: 8px;
+    line-height: 1.2em;
 }

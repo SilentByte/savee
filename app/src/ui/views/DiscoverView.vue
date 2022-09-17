@@ -28,6 +28,12 @@
                                 <div class="ms-2 text-fancy">
                                     <strong>{{ f.provider.displayName }}</strong>
                                 </div>
+
+                                <v-spacer />
+
+                                <div class="text-caption text-disabled">
+                                    {{ formatFeedDate(f) }}
+                                </div>
                             </v-toolbar>
                         </v-col>
 
@@ -44,8 +50,10 @@
                                            justify="center">
                                         <v-col cols="12"
                                                class="fill-height">
+                                            <!--suppress HtmlUnknownAttribute -->
                                             <video v-if="isVideoUrl(contentUrl)"
-                                                   autoplay muted loop
+                                                   autoplay muted loop playsinline
+                                                   disablepictureinpicture disableremoteplayback
                                                    style="object-fit: fill"
                                                    width="100%"
                                                    height="100%"
@@ -118,6 +126,8 @@
 
 <script lang="ts">
 
+import { DateTime } from "luxon";
+
 import {
     Component,
     Vue,
@@ -154,6 +164,10 @@ export default class DiscoverView extends Vue {
         return false;
     }
 
+    private formatFeedDate(item: IFeedItem) {
+        return DateTime.fromISO(item.createdOn).toRelative();
+    }
+
     private formatLikeCounter(item: IFeedItem) {
         return item.likeCounter === 1
             ? "1 like"
@@ -173,7 +187,7 @@ export default class DiscoverView extends Vue {
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
 .photo-counter {
     letter-spacing: 1px !important;

@@ -39,6 +39,8 @@
                            inset />
             </template>
         </v-list>
+
+        <ConversationDialog ref="conversationDialog" />
     </v-container>
 </template>
 
@@ -49,14 +51,23 @@ import { DateTime } from "luxon";
 import last from "lodash/last";
 
 import {
-    Component,
     Vue,
+    Component,
+    Ref,
 } from "vue-property-decorator";
 
 import { IConversation } from "@server/models/api";
 
-@Component
+import ConversationDialog from "@/ui/dialogs/ConversationDialog.vue";
+
+@Component({
+    components: {
+        ConversationDialog,
+    },
+})
 export default class ChatView extends Vue {
+    @Ref("conversationDialog") private readonly conversationDialogRef!: ConversationDialog;
+
     private get conversations(): IConversation[] {
         return Object.values(this.$store._conversations);
     }
@@ -78,7 +89,7 @@ export default class ChatView extends Vue {
     }
 
     private onOpenConversation(conversation: IConversation) {
-        console.log(conversation)
+        this.conversationDialogRef.show(conversation);
     }
 }
 
