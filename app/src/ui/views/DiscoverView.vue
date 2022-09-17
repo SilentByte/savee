@@ -5,19 +5,18 @@
 
 <template>
     <v-container class="px-0">
-        <div style="height: 1000px;">a</div>
         <v-row dense
                class="px-0">
 
-            <v-lazy v-for="(f, feedIndex) in feed" :key="f.id"
-                    :options="{
-                        threshold: 0,
-                        rootMargin: '100px 0px'
-                    }"
-                    min-height="200"
-                    transition="fade-transition">
-                <v-col cols="12"
-                       class="px-0">
+            <v-col v-for="(f, feedIndex) in feed" :key="f.id"
+                   cols="12"
+                   class="px-0">
+                <v-lazy min-height="100"
+                        transition="fade-transition"
+                        :options="{
+                            threshold: 0,
+                            rootMargin: '100px 0px'
+                        }">
                     <v-row no-gutters>
                         <v-col cols="12">
                             <v-toolbar flat dense
@@ -37,22 +36,33 @@
                                         hide-delimiter-background
                                         delimiter-icon="mdi-circle-medium"
                                         :continuous="false">
-                                <v-carousel-item v-for="(photoUrl, photoIndex) in f.photoUrls" :key="photoIndex"
+                                <v-carousel-item v-for="(contentUrl, photoIndex) in f.contentUrls" :key="photoIndex"
                                                  eager>
-                                    <v-row class="fill-height"
+                                    <v-row no-gutters
+                                           class="fill-height"
                                            align="center"
                                            justify="center">
-                                        <v-col cols="12">
-                                            <v-img class="text-end"
+                                        <v-col cols="12"
+                                               class="fill-height">
+                                            <video v-if="isVideoUrl(contentUrl)"
+                                                   autoplay muted loop
+                                                   style="object-fit: fill"
+                                                   width="100%"
+                                                   height="100%"
+                                                   :src="contentUrl" />
+
+                                            <v-img v-else
+                                                   class="text-end"
                                                    :aspect-ratio="9/16"
-                                                   :src="photoUrl">
-                                                <v-chip small dark
-                                                        class="mx-6 my-4 px-2 photo-counter"
-                                                        color="#00000099">
-                                                    {{ photoIndex + 1 }}/{{ f.photoUrls.length }}
-                                                </v-chip>
-                                            </v-img>
+                                                   :src="contentUrl" />
                                         </v-col>
+
+                                        <v-chip small dark
+                                                style="position: absolute; top: 0; right: 0"
+                                                class="mx-6 my-4 px-2 photo-counter"
+                                                color="#00000099">
+                                            {{ photoIndex + 1 }}/{{ f.contentUrls.length }}
+                                        </v-chip>
                                     </v-row>
                                 </v-carousel-item>
                             </v-carousel>
@@ -100,8 +110,8 @@
                             <v-divider v-if="feedIndex < feed.length - 1" />
                         </v-col>
                     </v-row>
-                </v-col>
-            </v-lazy>
+                </v-lazy>
+            </v-col>
         </v-row>
     </v-container>
 </template>
@@ -119,6 +129,29 @@ import { IFeedItem } from "@server/models/api";
 export default class DiscoverView extends Vue {
     private get feed() {
         return this.$store._feed;
+    }
+
+    private foo = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+    private isVideoUrl(url: string) {
+        const videoExtensions = [
+            ".avi",
+            ".flv",
+            ".mkv",
+            ".mov",
+            ".mp4",
+            ".mpg",
+            ".webm",
+            ".wmv",
+        ];
+
+        for(const e of videoExtensions) {
+            if(url.endsWith(e)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private formatLikeCounter(item: IFeedItem) {

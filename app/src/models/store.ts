@@ -9,7 +9,6 @@ import mapValues from "lodash/mapValues";
 import {
     IContact,
     IConversation,
-    IFeedComment,
     IFeedItem,
     IPayment,
     Timestamp,
@@ -75,7 +74,7 @@ export class Store {
     _feed: IFeedItem[] = Object.values(fixture.products).map(p => ({
         id: p.id as Uuid,
         provider: contactFromFixture((fixture.accounts as any)[p.providerId]),
-        photoUrls: p.photoUrls,
+        contentUrls: p.contentUrls,
         price: p.price,
         currency: p.currency,
         description: p.description,

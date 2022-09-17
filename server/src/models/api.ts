@@ -17,7 +17,7 @@ export {
 export interface IFeedItem {
     id: Uuid;
     provider: IContact;
-    photoUrls: string[];
+    contentUrls: string[];
     price: number;
     currency: string;
     description: string;

@@ -12,7 +12,7 @@ export interface IProductRecord {
     id: Uuid;
     name: string;
     providerId: Uuid;
-    photoUrls: string[];
+    contentUrls: string[];
     price: number;
     currency: string;
     description: string;

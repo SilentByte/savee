@@ -66,7 +66,7 @@ const fixtures: IData = {
         ...o<IProductRecord>("303cd996-4e3f-4cee-95e3-b1ba098e9d49", {
             name: "Fancy Shoes",
             providerId: "00000000-0000-0000-0000-85ae086067e9" as Uuid,
-            photoUrls: [
+            contentUrls: [
                 "https://images.unsplash.com/photo-1521001750463-5f3e18f2da2d?auto=format&fit=crop&w=1080&q=80",
                 "https://images.unsplash.com/photo-1520902980812-1e65704af11e?auto=format&fit=crop&w=1080&q=80",
             ],
@@ -82,7 +82,8 @@ const fixtures: IData = {
         ...o<IProductRecord>("d303ff54-f3d4-49a9-8193-76e0cb7cb60d", {
             name: "Hat Collection",
             providerId: "00000000-0000-0000-0000-85ae086067e9" as Uuid,
-            photoUrls: [
+            contentUrls: [
+                "https://rab-stuff.web.app/savee/content/hat-video.mp4",
                 "https://images.unsplash.com/photo-1566333450073-4638cdc76e18?auto=format&fit=crop&w=1080&q=80",
                 "https://images.unsplash.com/photo-1617816989547-b129bcde3b3a?auto=format&fit=crop&w=1080&q=80",
                 "https://images.unsplash.com/photo-1578421954862-b6ce7dc7a70a?auto=format&fit=crop&w=1080&q=80",
