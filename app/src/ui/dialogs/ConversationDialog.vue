@@ -73,6 +73,15 @@
                                 </template>
                                 <v-spacer v-else />
                             </div>
+
+                            <div class="text-caption text-disabled"
+                                 :class="{
+                                    'chat-message-date': true,
+                                    'self': isMessageFromSelf(message),
+                                    'other': !isMessageFromSelf(message),
+                                 }">
+                                <small>{{ formatMessageDate(message) }}</small>
+                            </div>
                         </v-col>
                     </v-row>
                 </v-container>
@@ -165,6 +174,10 @@ export default class ConversationDialog extends Vue {
             : this.model.conversation?.recipient.avatarUrl;
     }
 
+    private formatMessageDate(message: IMessage) {
+        return DateTime.fromISO(message.sentOn).toRelative();
+    }
+
     private scrollToBottom() {
         if(this.conversationBodyRef) {
             this.conversationBodyRef.scrollTo(0, this.conversationBodyRef.scrollHeight);
@@ -235,6 +248,16 @@ $chat-message-offset: 64px;
 
 .chat-message.other {
     margin-right: $chat-message-offset;
+}
+
+.chat-message-date.self {
+    text-align: right;
+    margin-right: 48px;
+}
+
+.chat-message-date.other {
+    text-align: left;
+    margin-left: 48px;
 }
 
 .reply-body {
