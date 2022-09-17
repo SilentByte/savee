@@ -5,9 +5,18 @@
 
 import Vue from "vue";
 
+function value<T>(value: T | null | undefined, defaultValue: T): T {
+    return value === null || value === undefined
+        ? defaultValue
+        : value;
+}
+
 class Formatter {
-    currency(currency: string, value: number, options?: { decimals: number }): string {
-        const digits = Number.isInteger(value) ? 0 : options?.decimals;
+    money(currency: string, value: number, options?: { decimals: number }): string {
+        const digits = options?.decimals === undefined
+            ? (Number.isInteger(value) ? 0 : undefined)
+            : options.decimals;
+
         return (new Intl.NumberFormat("en-US", {
             style: "currency",
             currency,

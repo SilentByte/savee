@@ -65,9 +65,16 @@
                                                    :src="contentUrl" />
                                         </v-col>
 
+                                        <v-chip dark
+                                                style="position: absolute; top: 0; left: 0; min-width: 60px;"
+                                                class="mx-6 my-4 px-2 content-chip justify-center"
+                                                color="#d81b6099">
+                                            {{ $format.money(f.currency, f.price) }}
+                                        </v-chip>
+
                                         <v-chip small dark
                                                 style="position: absolute; top: 0; right: 0"
-                                                class="mx-6 my-4 px-2 photo-counter"
+                                                class="mx-6 my-4 px-2 content-chip"
                                                 color="#00000099">
                                             {{ photoIndex + 1 }}/{{ f.contentUrls.length }}
                                         </v-chip>
@@ -189,7 +196,7 @@ export default class DiscoverView extends Vue {
 
 <style lang="scss" scoped>
 
-.photo-counter {
+.content-chip {
     letter-spacing: 1px !important;
 }
 

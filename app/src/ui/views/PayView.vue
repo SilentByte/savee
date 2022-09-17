@@ -46,7 +46,7 @@
                         </v-list-item-content>
 
                         <v-list-item-action-text>
-                            {{ p.currency }} {{ p.amount }}
+                            {{ $format.money(p.currency, p.amount) }}
                         </v-list-item-action-text>
                     </v-list-item>
                 </v-list>

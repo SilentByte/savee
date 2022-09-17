@@ -64,7 +64,7 @@
                                     <div style="position: absolute; bottom: -10px">
                                         <v-chip small
                                                 color="primary">
-                                            {{ $format.currency(message.currency, message.amount) }}
+                                            {{ $format.money(message.currency, message.amount) }}
                                         </v-chip>
                                     </div>
                                 </v-btn>
