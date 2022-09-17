@@ -91,7 +91,7 @@
                                     <v-icon v-else>mdi-bookmark-outline</v-icon>
                                 </v-btn>
 
-                                <v-btn depressed
+                                <v-btn depressed rounded
                                        class="ms-2"
                                        color="primary">
                                     Buy
