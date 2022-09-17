@@ -13,7 +13,9 @@
                        @click="onPay">
                     <v-row dense>
                         <v-col cols="12">
-                            <v-icon size="40">mdi-currency-usd</v-icon>
+                            <v-icon size="50">
+                                mdi-currency-usd
+                            </v-icon>
                         </v-col>
                         <v-col cols="12">
                             PAY NOW

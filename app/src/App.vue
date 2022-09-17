@@ -4,9 +4,11 @@
 -->
 
 <template>
-    <!-- TODO: Toggle depending on loading logic. -->
-    <v-app v-if="false">
+    <v-app v-if="!$store.isAppReady">
         <SplashView />
+    </v-app>
+    <v-app v-else-if="!$store.isUserAuthenticated">
+        <AuthView />
     </v-app>
     <v-app v-else>
         <v-app-bar app dark hide-on-scroll
@@ -98,9 +100,11 @@ import * as fullscreen from "@/modules/fullscreen";
 
 import SplashView from "@/ui/views/SplashView.vue";
 import AppMessageDialog from "@/ui/dialogs/AppMessageDialog.vue";
+import AuthView from "@/ui/views/AuthView.vue";
 
 @Component({
     components: {
+        AuthView,
         AppMessageDialog,
         SplashView,
     },
