@@ -8,7 +8,8 @@ import mapValues from "lodash/mapValues";
 
 import {
     IContact,
-    IConversation, IFeedComment,
+    IConversation,
+    IFeedComment,
     IFeedItem,
     IPayment,
     Timestamp,
@@ -108,7 +109,6 @@ export class Store {
 
     _payments: IPayment[] = fixture.accounts[USER_ID].payments.map(p => ({
         id: p.id as Uuid,
-        avatarUrl: p.avatarUrl,
         recipient: this._contacts.find(c => c.id === p.recipientId)!,
         currency: p.currency,
         amount: p.amount,
