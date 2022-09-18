@@ -74,7 +74,6 @@ export default class AuthView extends Vue {
 
     private passwordRules = [
         (v: string) => !!v || "Please enter your password",
-        (v: string) => v.length <= 10 || "Name must be less than 10 characters",
     ];
 
     private async onLogin() {

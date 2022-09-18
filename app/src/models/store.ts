@@ -214,6 +214,9 @@ function showUnhandledErrorNotification(error: any) {
     const message = {
         "auth/user-not-found": "Looks like the user does not exist.",
         "auth/wrong-password": "Your password is incorrect!",
+        "auth/code-expired": "The authentication code has expired.",
+        "auth/email-already-in-use": "Looks like this e-mail address is already in use!",
+        "auth/weak-password": "Your password is not strong enough.",
     }[(error?.code) as string] || "Oh no! An unhandled error occurred!";
 
     store.showNotificationSnackbar("error", message);
