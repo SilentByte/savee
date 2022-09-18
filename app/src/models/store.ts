@@ -71,6 +71,12 @@ export class Store {
         text: "",
     };
 
+    // TODO: IMPLEMENT.
+    isAppReady = true;
+
+    // TODO: IMPLEMENT.
+    isUserAuthenticated = false;
+
     _feed: IFeedItem[] = Object.values(fixture.products).map(p => ({
         id: p.id as Uuid,
         provider: contactFromFixture((fixture.accounts as any)[p.providerId]),

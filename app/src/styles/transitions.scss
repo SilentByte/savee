@@ -1,0 +1,10 @@
+//
+// SAVEE SUPER APP
+// Copyright (c) 2022 SilentByte <https://silentbyte.com/>
+//
+
+.dialog-right-transition {
+    &-enter, &-leave-to {
+        transform: translateX(100%);
+    }
+}

@@ -4,7 +4,8 @@
 -->
 
 <template>
-    <v-container class="d-flex splash-view align-center">
+    <v-container fluid
+                 class="d-flex view align-center justify-center">
         <v-row class="d-flex align-center text-center">
             <v-col cols="12">
                 <img src="@/assets/brand.svg"
@@ -33,11 +34,11 @@ export default class SplashView extends Vue {
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
 @import "~@/styles/variables";
 
-.splash-view {
+.view {
     height: 100vh;
     padding: 60px;
 
