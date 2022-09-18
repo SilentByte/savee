@@ -12,6 +12,7 @@
     "@fontsource/quicksand": "^4.5.10",
     "@mdi/font": "5.9.55",
     "core-js": "^3.8.3",
+    "firebase": "^9.10.0",
     "lodash": "^4.17.21",
     "luxon": "^3.0.3",
     "roboto-fontface": "*",

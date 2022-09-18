@@ -5,18 +5,18 @@
 
 import Vue from "vue";
 
-import { Store } from "@/models/store";
+import { store } from "@/models/store";
 
 declare module "vue/types/vue" {
     interface Vue {
-        $store: Store;
+        $store: typeof store;
     }
 }
 
 // noinspection JSUnusedGlobalSymbols
 const VueGlobalStore = {
     install(vue: any): void {
-        (vue.prototype as any).$store = Vue.observable(new Store());
+        (vue.prototype as any).$store = Vue.observable(store);
     },
 };
 

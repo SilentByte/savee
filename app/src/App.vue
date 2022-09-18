@@ -42,6 +42,12 @@
                     <v-list-item to="about">
                         <v-list-item-title>About</v-list-item-title>
                     </v-list-item>
+
+                    <v-divider />
+
+                    <v-list-item @click="onSignOut">
+                        <v-list-item-title>Sign Out</v-list-item-title>
+                    </v-list-item>
                 </v-list>
             </v-menu>
         </v-app-bar>
@@ -85,6 +91,7 @@
             </v-btn>
         </v-bottom-navigation>
 
+        <AppNotificationSnackbar />
         <AppMessageDialog />
     </v-app>
 </template>
@@ -101,9 +108,11 @@ import * as fullscreen from "@/modules/fullscreen";
 import SplashView from "@/ui/views/SplashView.vue";
 import AppMessageDialog from "@/ui/dialogs/AppMessageDialog.vue";
 import AuthView from "@/ui/views/AuthView.vue";
+import AppNotificationSnackbar from "@/ui/components/AppNotificationSnackbar.vue";
 
 @Component({
     components: {
+        AppNotificationSnackbar,
         AuthView,
         AppMessageDialog,
         SplashView,
@@ -116,6 +125,14 @@ export default class App extends Vue {
         } else {
             fullscreen.tryEnterFullscreen();
         }
+    }
+
+    private async onSignOut() {
+        await this.$store.signOut();
+    }
+
+    mounted() {
+        this.$store.initialize();
     }
 }
 

@@ -6,6 +6,8 @@
 import sortBy from "lodash/sortBy";
 import mapValues from "lodash/mapValues";
 
+import * as firebaseAuth from "firebase/auth";
+
 import {
     IContact,
     IConversation,
@@ -30,6 +32,13 @@ function contactFromFixture(o: any): IContact {
         displayName: o.displayName,
         avatarUrl: o.avatarUrl,
     };
+}
+
+export type AppSnackbarNotificationType = "error" | "warning" | "success" | "default"
+
+export interface IAppSnackbarNotification {
+    type: AppSnackbarNotificationType;
+    message: string;
 }
 
 export interface IAppMessageDialogCustomAction {
@@ -65,17 +74,26 @@ export interface IAppMessageDialogState {
     resolve?: (action: AppMessageDialogAction) => void;
 }
 
-export class Store {
+class Store {
+    appSnackbarNotification: IAppSnackbarNotification | null = null;
+
     appMessageDialog: IAppMessageDialogState = {
         visible: false,
         text: "",
     };
 
-    // TODO: IMPLEMENT.
-    isAppReady = true;
+    forceAppNotReady = false;
 
-    // TODO: IMPLEMENT.
-    isUserAuthenticated = false;
+    get isAppReady() {
+        return !this.forceAppNotReady && !this.firebaseAuthPending;
+    }
+
+    get isUserAuthenticated() {
+        return !!this.firebaseUser;
+    }
+
+    firebaseAuthPending = true;
+    firebaseUser: firebaseAuth.User | null = null;
 
     _feed: IFeedItem[] = Object.values(fixture.products).map(p => ({
         id: p.id as Uuid,
@@ -121,12 +139,27 @@ export class Store {
         items: [],
     }));
 
+    initialize() {
+        this.firebaseAuthPending = true;
+        firebaseAuth.onAuthStateChanged(firebaseAuth.getAuth(), (user) => {
+            store.firebaseUser = user;
+            this.firebaseAuthPending = false;
+        });
+    }
+
     key(parts: string[]): string {
         return sortBy(parts).join(":");
     }
 
     contactById(id: Uuid): IContact | null {
         return this._contacts.find(c => c.id === id) || null;
+    }
+
+    showNotificationSnackbar(type: AppSnackbarNotificationType, message: string) {
+        this.appSnackbarNotification = {
+            type,
+            message,
+        };
     }
 
     async showMessageDialog(payload: {
@@ -161,4 +194,63 @@ export class Store {
 
         return action;
     }
+
+    async signIn(email: string, password: string) {
+        const auth = firebaseAuth.getAuth();
+        const credentials = await firebaseAuth.signInWithEmailAndPassword(auth, email, password);
+        this.firebaseUser = credentials.user;
+    }
+
+    async signOut() {
+        this.forceAppNotReady = true;
+        await firebaseAuth.getAuth().signOut();
+        location.reload();
+    }
 }
+
+export const store = new Store();
+
+function showUnhandledErrorNotification(error: any) {
+    const message = {
+        "auth/user-not-found": "Looks like the user does not exist.",
+        "auth/wrong-password": "Your password is incorrect!",
+    }[(error?.code) as string] || "Oh no! An unhandled error occurred!";
+
+    store.showNotificationSnackbar("error", message);
+}
+
+export async function globalVueErrorHandler(error: Error, vm: Vue, info: string): Promise<void> {
+    if(process.env.NODE_ENV === "development") {
+        console.error("UNHANDLED VUE ERROR", {
+            code: (error as any)?.code,
+            error,
+            vm,
+            info,
+        });
+    }
+
+    showUnhandledErrorNotification(error);
+}
+
+window.onerror = async (msg, url, line, col, error?: Error) => {
+    if(process.env.NODE_ENV === "development") {
+        console.error("UNHANDLED ERROR", {
+            code: (error as any)?.code,
+            msg,
+            url,
+            line,
+            col,
+            error,
+        });
+    }
+
+    showUnhandledErrorNotification(error);
+};
+
+window.onunhandledrejection = async (e: PromiseRejectionEvent) => {
+    if(process.env.NODE_ENV === "development") {
+        console.error("UNHANDLED PROMISE REJECTION ERROR", e);
+    }
+
+    showUnhandledErrorNotification(e.reason?.error);
+};

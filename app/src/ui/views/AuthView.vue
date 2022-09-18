@@ -42,6 +42,8 @@
                 </v-col>
             </v-row>
         </v-form>
+
+        <AppNotificationSnackbar />
     </v-container>
 </template>
 
@@ -52,7 +54,13 @@ import {
     Vue,
 } from "vue-property-decorator";
 
-@Component
+import AppNotificationSnackbar from "@/ui/components/AppNotificationSnackbar.vue";
+
+@Component({
+    components: {
+        AppNotificationSnackbar,
+    },
+})
 export default class AuthView extends Vue {
     private form = false;
     private email = "";
@@ -72,8 +80,7 @@ export default class AuthView extends Vue {
     private async onLogin() {
         try {
             this.loading = true;
-
-            // TODO: IMPLEMENT.
+            await this.$store.signIn(this.email, this.password);
         } finally {
             this.loading = false;
         }
