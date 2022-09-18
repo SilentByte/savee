@@ -17,7 +17,7 @@
                 </v-btn>
 
                 <v-toolbar-title>
-                    {{ model.conversation.recipient.displayName }}
+                    {{ $store.users[model.conversation.recipientId]?.displayName }}
                 </v-toolbar-title>
 
                 <v-spacer />
@@ -43,7 +43,7 @@
                          class="px-0 fill-height conversation-body">
                 <v-container class="align-start px-2">
                     <v-row dense>
-                        <v-col v-for="message in model.conversation.messages" :key="message.id"
+                        <v-col v-for="message in messages" :key="message.id"
                                cols="12">
                             <div v-if="message.type === 'money-transfer'"
                                  :class="{
@@ -74,7 +74,7 @@
                                 <template v-if="!isMessageFromSelf(message)">
                                     <v-avatar class="me-2"
                                               size="36">
-                                        <v-img :src="messageSenderAvatarUrl(message)" />
+                                        <img :src="messageSenderAvatarUrl(message)" />
                                     </v-avatar>
                                 </template>
                                 <v-spacer v-else />
@@ -93,7 +93,7 @@
                                 <template v-if="isMessageFromSelf(message)">
                                     <v-avatar size="36"
                                               class="ms-2">
-                                        <v-img :src="messageSenderAvatarUrl(message)" />
+                                        <img :src="messageSenderAvatarUrl(message)" />
                                     </v-avatar>
                                 </template>
                                 <v-spacer v-else />
@@ -159,7 +159,7 @@ import {
 import {
     IConversation,
     IMessage,
-} from "@server/models/api";
+} from "@/models/store";
 
 interface IModel {
     conversation: IConversation | null;
@@ -189,18 +189,26 @@ export default class ConversationDialog extends Vue {
         return !this.model.typedMessage.trim();
     }
 
+    private get messages() {
+        return this.$store.conversations.find(c => c.id === this.model.conversation?.id)?.messages || [];
+    }
+
     private isMessageFromSelf(message: IMessage) {
-        return message.senderId === this.$store._profile.id;
+        return message.senderId === this.$store.profile?.id;
     }
 
     private messageSenderAvatarUrl(message: IMessage) {
+        if(!this.model.conversation?.recipientId) {
+            return;
+        }
+
         return this.isMessageFromSelf(message)
-            ? this.$store._profile.avatarUrl
-            : this.model.conversation?.recipient.avatarUrl;
+            ? this.$store.profile?.avatarUrl
+            : this.$store.users[this.model.conversation?.recipientId]?.avatarUrl;
     }
 
     private formatMessageDate(message: IMessage) {
-        return DateTime.fromISO(message.sentOn).toRelative();
+        return message.sentOn.toLocaleString(DateTime.DATETIME_SHORT);
     }
 
     private scrollToBottom() {
@@ -228,7 +236,8 @@ export default class ConversationDialog extends Vue {
     }
 
     private onSendMessage() {
-        // TODO: IMPLEMENT.
+        this.$store.sendChatMessage(this.model.conversation!.recipientId, this.model.typedMessage);
+
         this.model.typedMessage = "";
 
         this.replyTextAreaRef.focus();
@@ -239,8 +248,9 @@ export default class ConversationDialog extends Vue {
         // TODO: IMPLEMENT.
     }
 
-    @Watch("model.conversation.messages")
-    private onTranscriptionAdded() {
+    @Watch("$store.conversations", {deep: true})
+    private async onMessageAdded() {
+        await this.$nextTick();
         this.scrollToBottom();
     }
 }

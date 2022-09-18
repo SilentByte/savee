@@ -11,7 +11,7 @@
                              two-line inactive
                              @click="onOpenConversation(c)">
                     <v-list-item-avatar>
-                        <v-img :src="c.recipient.avatarUrl">
+                        <v-img :src="$store.users[c.recipientId]?.avatarUrl">
                             <template v-slot:placeholder>
                                 <v-skeleton-loader type="card" />
                             </template>
@@ -20,7 +20,7 @@
 
                     <v-list-item-content>
                         <v-list-item-title>
-                            {{ c.recipient.displayName }}
+                            {{ $store.users[c.recipientId]?.displayName }}
                         </v-list-item-title>
                         <v-list-item-subtitle>
                             {{ formatLastMessagePreview(c) }}
@@ -56,7 +56,7 @@ import {
     Ref,
 } from "vue-property-decorator";
 
-import { IConversation } from "@server/models/api";
+import { IConversation } from "@/models/store";
 
 import ConversationDialog from "@/ui/dialogs/ConversationDialog.vue";
 
@@ -69,21 +69,13 @@ export default class ChatView extends Vue {
     @Ref("conversationDialog") private readonly conversationDialogRef!: ConversationDialog;
 
     private get conversations(): IConversation[] {
-        return Object.values(this.$store._conversations);
+        return this.$store.conversations;
     }
 
-    // TODO: Implement type definition (shared with server).
     private formatLastMessageTime(conversation: IConversation) {
-        const sentOn = last(conversation.messages)?.sentOn;
-
-        if(!sentOn) {
-            return "";
-        }
-
-        return DateTime.fromISO(sentOn).toRelative();
+        return last(conversation.messages)?.sentOn?.toRelative();
     }
 
-    // TODO: Implement type definition (shared with server).
     private formatLastMessagePreview(conversation: IConversation) {
         return last(conversation.messages)?.text;
     }

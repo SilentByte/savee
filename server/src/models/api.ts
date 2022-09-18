@@ -15,7 +15,7 @@ export {
 } from "./common";
 
 export interface IFeedItem {
-    id: Uuid;
+    id: string;
     provider: IContact;
     contentUrls: string[];
     price: number;
@@ -29,23 +29,23 @@ export interface IFeedItem {
 }
 
 export interface IFeedComment {
-    id: Uuid;
+    id: string;
     displayName: string;
     text: string;
     postedOn: Timestamp;
 }
 
 export interface IContact {
-    id: Uuid;
+    id: string;
     displayName: string;
     avatarUrl: string;
 }
 
 export interface IMessage {
     type: "text" | "money-transfer";
-    id: Uuid;
-    senderId: Uuid;
-    recipientId: Uuid;
+    id: string;
+    senderId: string;
+    recipientId: string;
     sentOn: Timestamp;
 }
 
@@ -64,15 +64,15 @@ export interface IMoneyTransferMessage extends IMessage {
 
 export type CombinedMessage = ITextMessage | IMoneyTransferMessage;
 
-export interface IConversation {
-    id: Uuid;
-    recipient: IContact;
-    messages: CombinedMessage[];
-    createdOn: Timestamp;
-}
+// export interface IConversation {
+//     id: string;
+//     recipient: IContact;
+//     messages: CombinedMessage[];
+//     createdOn: Timestamp;
+// }
 
 export interface IPayment {
-    id: Uuid;
+    id: string;
     recipient: IContact;
     currency: string;
     amount: number;
@@ -81,7 +81,7 @@ export interface IPayment {
 }
 
 export interface IPaymentItem {
-    id: Uuid;
+    id: string;
     name: string;
     quantity: number;
     amount: number;

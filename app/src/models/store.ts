@@ -3,15 +3,18 @@
 // Copyright (c) 2022 SilentByte <https://silentbyte.com/>
 //
 
+import { DateTime } from "luxon";
+
 import sortBy from "lodash/sortBy";
 import mapValues from "lodash/mapValues";
+
+import Vue from "vue";
 
 import * as firebaseAuth from "firebase/auth";
 import * as firebaseStore from "firebase/firestore";
 
 import {
     IContact,
-    IConversation,
     IFeedItem,
     IPayment,
     Timestamp,
@@ -20,7 +23,6 @@ import {
 
 // TODO: Replace with proper API calls.
 import * as fixture from "../../../server/db.json";
-import firebase from "firebase/compat";
 
 const USER_ID = "00000000-0000-0000-0000-ad930cca741a";
 
@@ -82,6 +84,35 @@ export interface IUserProfile {
     avatarUrl: string;
 }
 
+export interface IConversation {
+    id: string;
+    recipientId: string;
+    messages: CombinedMessage[];
+}
+
+export interface IMessage {
+    type: "text" | "money-transfer";
+    id: string;
+    senderId: string;
+    recipientId: string;
+    sentOn: DateTime;
+}
+
+export interface ITextMessage extends IMessage {
+    type: "text",
+    text: string;
+}
+
+export interface IMoneyTransferMessage extends IMessage {
+    type: "money-transfer";
+    text: string;
+    amount: number;
+    currency: string;
+    isAccepted: boolean;
+}
+
+export type CombinedMessage = ITextMessage | IMoneyTransferMessage;
+
 class Store {
     appSnackbarNotification: IAppSnackbarNotification | null = null;
 
@@ -119,26 +150,63 @@ class Store {
 
     profile: IUserProfile | null = null;
 
-    _profile: IContact = (o => ({
-        id: o.id as Uuid,
-        displayName: o.displayName,
-        avatarUrl: o.avatarUrl,
-    }))(fixture.accounts[USER_ID]);
+    users: Record<string, IUserProfile> = {};
+
+    messages: Record<string, CombinedMessage> = {};
+
+    get conversations(): IConversation[] {
+        if(Object.values(this.users).length === 0) {
+            return [];
+        }
+
+        const cache: Record<string, CombinedMessage[]> = {};
+
+        for(const m of Object.values(this.messages)) {
+            const key = this.key([m.senderId, m.recipientId]);
+
+            if(!cache[key]) {
+                cache[key] = [];
+            }
+
+            cache[key].push(m);
+        }
+
+        const result: IConversation[] = [];
+        for(const c of Object.entries(cache)) {
+            if(c[1].length === 0) {
+                continue;
+            }
+
+            const messages = sortBy(c[1], m => m.sentOn.toMillis());
+            result.push({
+                id: c[0],
+                recipientId: messages[0].senderId === this.profile?.id ? messages[0].recipientId : messages[0].senderId,
+                messages,
+            });
+        }
+
+        return result;
+    }
+
+    // _profile: IContact = (o => ({
+    //     id: o.id as Uuid,
+    //     displayName: o.displayName,
+    //     avatarUrl: o.avatarUrl,
+    // }))(fixture.accounts[USER_ID]);
 
     _contacts: IContact[] = Object
         .values(fixture.accounts)
         .filter(o => o.id !== USER_ID)
         .map(contactFromFixture);
 
-    _conversations: Record<Uuid, IConversation[]> = mapValues(fixture.conversations, o => hint<IConversation>({
-        id: o.id as Uuid,
-        recipient: contactFromFixture((fixture.accounts as any)[o.id.split(":").find(id => id !== USER_ID)!]),
-        messages: o.messages.map(m => ({
-            ...m,
-            isAccepted: true,
-        })) as any,
-        createdOn: o.createdOn as Timestamp,
-    }));
+    // _conversations: Record<Uuid, IConversation[]> = mapValues(fixture.conversations, o => hint<IConversation>({
+    //     id: o.id as Uuid,
+    //     recipient: contactFromFixture((fixture.accounts as any)[o.id.split(":").find(id => id !== USER_ID)!]),
+    //     messages: o.messages.map(m => ({
+    //         ...m,
+    //         isAccepted: true,
+    //     })) as any,
+    // }));
 
     _payments: IPayment[] = fixture.accounts[USER_ID].payments.map(p => ({
         id: p.id as Uuid,
@@ -149,11 +217,66 @@ class Store {
         items: [],
     }));
 
+    private async setupDatabaseConnection(userId: string) {
+        const db = firebaseStore.getFirestore();
+
+        const addMessage = (id: string, data: any) => {
+            Vue.set(this.messages, id, {
+                id,
+                type: data.type || "text",
+                senderId: data.senderId,
+                recipientId: data.recipientId,
+                sentOn: DateTime.fromSeconds(data.sentOn?.seconds || 0),
+                text: data.text,
+                amount: data.amount,
+                currency: data.currency,
+                isAccepted: data.isAccepted,
+            });
+        };
+
+        // TODO: Change workflow; rules need to be adjusted for production.
+        firebaseStore.onSnapshot(firebaseStore.collection(db, "users"),
+            (snap) => {
+                snap.forEach((doc) => {
+                    const data = doc.data();
+                    Vue.set(this.users, doc.id, {
+                        id: doc.id,
+                        avatarUrl: data.avatarUrl || "", // TODO: Assign default URL.
+                        displayName: data.displayName || "Anonymous",
+                    });
+                });
+            },
+        );
+
+        // Messages by sender.
+        firebaseStore.onSnapshot(
+            firebaseStore.query(firebaseStore.collection(db, "messages"),
+                firebaseStore.where("senderId", "==", userId)),
+            (snap) => {
+                snap.forEach((doc) => {
+                    addMessage(doc.id, doc.data());
+                });
+            },
+        );
+
+        // Messages by recipient.
+        firebaseStore.onSnapshot(
+            firebaseStore.query(firebaseStore.collection(db, "messages"),
+                firebaseStore.where("recipientId", "==", userId)),
+            (snap) => {
+                snap.forEach((doc) => {
+                    addMessage(doc.id, doc.data());
+                });
+            },
+        );
+    }
+
     initialize() {
         this.firebaseAuthPending = true;
 
         firebaseAuth.onAuthStateChanged(firebaseAuth.getAuth(), async (user) => {
             this.profile = null;
+            this.messages = {};
 
             if(user) {
                 const db = firebaseStore.getFirestore();
@@ -164,6 +287,8 @@ class Store {
                     avatarUrl: profileData?.avatarUrl || user.photoURL || "", // TODO: Assign default URL.
                     displayName: profileData?.displayName || user.displayName || "Anonymous",
                 };
+
+                await this.setupDatabaseConnection(user.uid);
             }
 
             store.firebaseUser = user;
@@ -229,6 +354,16 @@ class Store {
         this.forceAppNotReady = true;
         await firebaseAuth.getAuth().signOut();
         location.reload();
+    }
+
+    async sendChatMessage(recipientId: string, text: string) {
+        const db = firebaseStore.getFirestore();
+        await firebaseStore.addDoc(firebaseStore.collection(db, "messages"), {
+            recipientId,
+            senderId: this.profile!.id,
+            sentOn: firebaseStore.serverTimestamp(),
+            text,
+        });
     }
 }
 
