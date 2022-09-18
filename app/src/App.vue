@@ -131,7 +131,7 @@ export default class App extends Vue {
         await this.$store.signOut();
     }
 
-    mounted() {
+    mounted(): void {
         this.$store.initialize();
     }
 }

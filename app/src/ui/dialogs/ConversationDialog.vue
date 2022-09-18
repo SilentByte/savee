@@ -209,7 +209,7 @@ export default class ConversationDialog extends Vue {
         }
     }
 
-    show(conversation: IConversation) {
+    show(conversation: IConversation): void {
         this.visible = true;
         this.model = {
             ...defaultModel(),
