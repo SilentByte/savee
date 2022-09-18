@@ -21,9 +21,12 @@
 
             <v-spacer />
 
-            <v-btn icon disabled>
-                <v-icon>mdi-magnify</v-icon>
-            </v-btn>
+            <v-select dense outlined hide-details autoselect
+                      item-value="id"
+                      item-text="text"
+                      style="max-width: 120px"
+                      :value="'USD'"
+                      :items="wallets" />
 
             <v-menu offset-y
                     min-width="200">
@@ -119,6 +122,13 @@ import AppNotificationSnackbar from "@/ui/components/AppNotificationSnackbar.vue
     },
 })
 export default class App extends Vue {
+    private get wallets() {
+        return Object.entries(this.$store.profile?.walletBalances || {}).map(e => ({
+            id: e[0],
+            text: this.$format.money(e[0], e[1], {decimals: 2}),
+        }));
+    }
+
     private onToggleFullscreen() {
         if(fullscreen.isFullscreen()) {
             fullscreen.tryExitFullscreen();

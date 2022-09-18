@@ -6,12 +6,12 @@
 import { DateTime } from "luxon";
 
 import sortBy from "lodash/sortBy";
-import mapValues from "lodash/mapValues";
 
 import Vue from "vue";
 
 import * as firebaseAuth from "firebase/auth";
 import * as firebaseStore from "firebase/firestore";
+import * as firebaseFunctions from "firebase/functions";
 
 import {
     IContact,
@@ -82,6 +82,7 @@ export interface IUserProfile {
     id: string;
     displayName: string;
     avatarUrl: string;
+    walletBalances: Record<string, number>;
 }
 
 export interface IConversation {
@@ -234,6 +235,19 @@ class Store {
             });
         };
 
+        // TODO: Change workflow; data rules need to be adjusted for production.
+        firebaseStore.onSnapshot(firebaseStore.doc(db, "users", this.profile!.id),
+            (doc) => {
+                const data = doc.data()!;
+                this.profile = {
+                    id: this.profile!.id,
+                    avatarUrl: data.avatarUrl || this.profile!.avatarUrl,
+                    displayName: data.displayName || this.profile!.displayName,
+                    walletBalances: data.walletBalances || this.profile!.walletBalances,
+                };
+            },
+        );
+
         // TODO: Change workflow; rules need to be adjusted for production.
         firebaseStore.onSnapshot(firebaseStore.collection(db, "users"),
             (snap) => {
@@ -286,6 +300,7 @@ class Store {
                     id: user.uid,
                     avatarUrl: profileData?.avatarUrl || user.photoURL || "", // TODO: Assign default URL.
                     displayName: profileData?.displayName || user.displayName || "Anonymous",
+                    walletBalances: profileData?.walletBalances || {},
                 };
 
                 await this.setupDatabaseConnection(user.uid);
@@ -364,6 +379,23 @@ class Store {
             sentOn: firebaseStore.serverTimestamp(),
             text,
         });
+    }
+
+    async transferMoney(payload: {
+        recipientId: string;
+        currency: string;
+        amount: number;
+        text: string;
+    }) {
+        const fn = firebaseFunctions.getFunctions();
+        const result = await firebaseFunctions.httpsCallable(fn, "transferMoney")({
+            recipientId: payload.recipientId,
+            currency: payload.currency,
+            amount: payload.amount,
+            text: payload.text,
+        });
+
+        console.log(result);
     }
 }
 

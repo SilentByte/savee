@@ -46,8 +46,6 @@
 
 <script lang="ts">
 
-import { DateTime } from "luxon";
-
 import last from "lodash/last";
 
 import {

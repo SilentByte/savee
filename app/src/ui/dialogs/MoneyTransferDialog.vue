@@ -4,8 +4,7 @@
 -->
 
 <template>
-    <v-dialog eager fullscreen hide-overlay scrollable
-              transition="dialog-right-transition"
+    <v-dialog eager
               v-model="visible">
         <v-card v-if="model.conversation"
                 class="dialog-body">
@@ -21,13 +20,6 @@
                 </v-toolbar-title>
 
                 <v-spacer />
-
-                <v-select dense outlined hide-details autoselect
-                          item-value="id"
-                          item-text="text"
-                          style="max-width: 120px"
-                          :value="'USD'"
-                          :items="wallets" />
 
                 <v-menu offset-y
                         min-width="200">
@@ -196,13 +188,6 @@ export default class ConversationDialog extends Vue {
         return !this.model.typedMessage.trim();
     }
 
-    private get wallets() {
-        return Object.entries(this.$store.profile?.walletBalances || {}).map(e => ({
-            id: e[0],
-            text: this.$format.money(e[0], e[1], {decimals: 2}),
-        }));
-    }
-
     private get messages() {
         return this.$store.conversations.find(c => c.id === this.model.conversation?.id)?.messages || [];
     }
@@ -247,7 +232,6 @@ export default class ConversationDialog extends Vue {
 
     private onViewTransactionHistory() {
         // TODO: IMPLEMENT.
-        //       Show summary of all 'money-transfer' messages.
     }
 
     private onSendMessage() {
