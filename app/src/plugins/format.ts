@@ -5,12 +5,6 @@
 
 import Vue from "vue";
 
-function value<T>(value: T | null | undefined, defaultValue: T): T {
-    return value === null || value === undefined
-        ? defaultValue
-        : value;
-}
-
 class Formatter {
     money(currency: string, value: number, options?: { decimals: number }): string {
         const digits = options?.decimals === undefined
