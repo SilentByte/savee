@@ -6,7 +6,7 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 
-import ChatView from "@/ui/views/ChatView.vue";
+import DiscoverView from "@/ui/views/DiscoverView.vue";
 
 Vue.use(VueRouter);
 
@@ -14,22 +14,22 @@ const routes: Array<RouteConfig> = [
     {
         path: "/",
         name: "home",
-        redirect: "/chat",
-    },
-    {
-        path: "/chat",
-        name: "chat",
-        component: ChatView,
-        meta: {
-            title: "Chat",
-        },
+        redirect: "/discover",
     },
     {
         path: "/discover",
         name: "discover",
-        component: () => import(/* webpackChunkName: "discover" */ "@/ui/views/DiscoverView.vue"),
+        component: DiscoverView,
         meta: {
             title: "Discover",
+        },
+    },
+    {
+        path: "/chat",
+        name: "chat",
+        component: () => import(/* webpackChunkName: "chat" */ "@/ui/views/ChatView.vue"),
+        meta: {
+            title: "Chat",
         },
     },
     {

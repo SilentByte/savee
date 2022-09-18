@@ -7,6 +7,7 @@ import sortBy from "lodash/sortBy";
 import mapValues from "lodash/mapValues";
 
 import * as firebaseAuth from "firebase/auth";
+import * as firebaseStore from "firebase/firestore";
 
 import {
     IContact,
@@ -19,6 +20,7 @@ import {
 
 // TODO: Replace with proper API calls.
 import * as fixture from "../../../server/db.json";
+import firebase from "firebase/compat";
 
 const USER_ID = "00000000-0000-0000-0000-ad930cca741a";
 
@@ -74,6 +76,12 @@ export interface IAppMessageDialogState {
     resolve?: (action: AppMessageDialogAction) => void;
 }
 
+export interface IUserProfile {
+    id: string;
+    displayName: string;
+    avatarUrl: string;
+}
+
 class Store {
     appSnackbarNotification: IAppSnackbarNotification | null = null;
 
@@ -109,6 +117,8 @@ class Store {
         createdOn: p.createdOn as Timestamp,
     }));
 
+    profile: IUserProfile | null = null;
+
     _profile: IContact = (o => ({
         id: o.id as Uuid,
         displayName: o.displayName,
@@ -141,7 +151,21 @@ class Store {
 
     initialize() {
         this.firebaseAuthPending = true;
-        firebaseAuth.onAuthStateChanged(firebaseAuth.getAuth(), (user) => {
+
+        firebaseAuth.onAuthStateChanged(firebaseAuth.getAuth(), async (user) => {
+            this.profile = null;
+
+            if(user) {
+                const db = firebaseStore.getFirestore();
+                const profileData = (await firebaseStore.getDoc(firebaseStore.doc(db, "users", user.uid))).data() as IUserProfile | undefined;
+
+                this.profile = {
+                    id: user.uid,
+                    avatarUrl: profileData?.avatarUrl || user.photoURL || "", // TODO: Assign default URL.
+                    displayName: profileData?.displayName || user.displayName || "Anonymous",
+                };
+            }
+
             store.firebaseUser = user;
             this.firebaseAuthPending = false;
         });
