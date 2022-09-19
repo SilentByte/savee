@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 
 rm -rf ./app/dist
 rm -rf ./api/dist
