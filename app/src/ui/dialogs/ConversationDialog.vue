@@ -197,14 +197,16 @@
         </v-dialog>
 
         <v-dialog v-if="model.conversation"
+                  eager
                   v-model="transferMoneyDialogVisible">
             <v-card>
                 <v-container>
-                    <v-form v-model="transferMoneyDialogForm">
+                    <v-form ref="transferMoneyDialogFormRef"
+                            v-model="transferMoneyDialogForm">
                         <v-row dense>
                             <v-col cols="12">
                                 <v-subheader class="px-1">
-                                    Send money to {{ $store.users[model.conversation.recipientId]?.displayName }}
+                                    Send money to {{ $store.users[model.conversation?.recipientId]?.displayName }}
                                 </v-subheader>
                             </v-col>
 
@@ -384,6 +386,7 @@ export default class ConversationDialog extends Vue {
     }
 
     private onShowTransferMoneyDialog() {
+        (this.$refs.transferMoneyDialogFormRef as any).resetValidation();
         this.transferMoneyDialogVisible = true;
         this.transferMoneyDialogForm = false;
         this.transferMoneyDialogCurrency = this.wallets[0]?.currency || "USD";
