@@ -66,10 +66,10 @@
                                        height="120">
                                     <v-avatar tile
                                               size="100">
-                                        <v-img src="@/assets/gift.svg" />
+                                        <v-img src="@/assets/flying_money.svg" />
                                     </v-avatar>
 
-                                    <div style="position: absolute; bottom: -10px">
+                                    <div style="position: absolute; bottom: 0">
                                         <v-chip small
                                                 color="primary">
                                             {{ $format.money(message.currency, message.amount) }}
@@ -472,7 +472,7 @@ $chat-message-offset: 64px;
 
 .gift-button {
     animation: pulse 2s infinite;
-    box-shadow: 0 0 0 0 rgba($info-color, 1);
+    box-shadow: 0 0 0 0 rgba($success-color, 1);
 }
 
 </style>

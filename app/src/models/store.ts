@@ -16,7 +16,6 @@ import * as firebaseFunctions from "firebase/functions";
 import {
     IContact,
     IFeedItem,
-    IPayment,
     Timestamp,
     Uuid,
 } from "@server/models/api";
