@@ -109,7 +109,8 @@
 
                                     <v-btn depressed rounded
                                            class="ms-2"
-                                           color="primary">
+                                           color="primary"
+                                           @click="onBuy">
                                         Buy
                                     </v-btn>
                                 </v-toolbar>
@@ -207,19 +208,27 @@ export default class DiscoverView extends Vue {
     }
 
     private formatLikeCounter(item: IFeedItem) {
-        return item.likeCounter === 1
+        const adjustedCounter = item.likeCounter + (item.isLiked ? 1 : 0);
+        return adjustedCounter === 1
             ? "1 like"
-            : `${item.likeCounter} likes`;
+            : `${adjustedCounter} likes`;
     }
 
     private onLike(item: IFeedItem) {
-        // TODO: IMPLEMENT / CONNECT TO DB.
         item.isLiked = !item.isLiked;
     }
 
     private onBookmark(item: IFeedItem) {
-        // TODO: IMPLEMENT / CONNECT TO DB.
         item.isBookmarked = !item.isBookmarked;
+    }
+
+    private onBuy() {
+        this.$store.showMessageDialog({
+            text: "This features is a work-in-progress! :-) Users will be able to purchase products in the app" +
+                " using their Rapyd Wallet.",
+            actions: ["ok"],
+            defaultAction: "ok",
+        });
     }
 }
 
