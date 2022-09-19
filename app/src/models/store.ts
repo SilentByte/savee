@@ -81,6 +81,12 @@ export interface IUserProfile {
     walletBalances: Record<string, number>;
 }
 
+export interface IPaymentItem {
+    text: string;
+    quantity: number;
+    amount: number;
+}
+
 export interface IConversation {
     id: string;
     recipientId: string;
@@ -105,6 +111,7 @@ export interface IMoneyTransferMessage extends IMessage {
     text: string;
     amount: number;
     currency: string;
+    paymentItems: IPaymentItem[];
     isAccepted: boolean;
 }
 
@@ -205,14 +212,14 @@ class Store {
     //     })) as any,
     // }));
 
-    _payments: IPayment[] = fixture.accounts[USER_ID].payments.map(p => ({
-        id: p.id as Uuid,
-        recipient: this._contacts.find(c => c.id === p.recipientId)!,
-        currency: p.currency,
-        amount: p.amount,
-        paidOn: p.paidOn as Timestamp,
-        items: [],
-    }));
+    // _payments: IPayment[] = fixture.accounts[USER_ID].payments.map(p => ({
+    //     id: p.id as Uuid,
+    //     recipient: this._contacts.find(c => c.id === p.recipientId)!,
+    //     currency: p.currency,
+    //     amount: p.amount,
+    //     paidOn: p.paidOn as Timestamp,
+    //     items: [],
+    // }));
 
     private async setupDatabaseConnection(userId: string) {
         const db = firebaseStore.getFirestore();
@@ -227,6 +234,7 @@ class Store {
                 text: data.text,
                 amount: data.amount,
                 currency: data.currency,
+                paymentItems: data.paymentItems || [],
                 isAccepted: data.isAccepted,
             });
         };
