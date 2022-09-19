@@ -229,7 +229,7 @@ class Store {
                 type: data.type || "text",
                 senderId: data.senderId,
                 recipientId: data.recipientId,
-                sentOn: DateTime.fromSeconds(data.sentOn?.seconds || 0),
+                sentOn: data.sentOn?.seconds ? DateTime.fromSeconds(data.sentOn.seconds) : DateTime.now(),
                 text: data.text,
                 amount: data.amount,
                 currency: data.currency,

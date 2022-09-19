@@ -55,7 +55,7 @@
                                cols="12">
                             <div v-if="message.type === 'money-transfer'"
                                  :class="{
-                                    'chat-message-gift': true,
+                                    'chat-message-money-transfer': true,
                                     'self': isMessageFromSelf(message),
                                     'other': !isMessageFromSelf(message),
                                  }">
@@ -90,6 +90,7 @@
                                 <v-card outlined class="d-inline-flex"
                                         :class="{
                                             'chat-message': true,
+                                            'special': message.type === 'money-transfer',
                                             'self': isMessageFromSelf(message),
                                             'other': !isMessageFromSelf(message),
                                         }">
@@ -250,6 +251,8 @@
 
 import { DateTime } from "luxon";
 
+import sortBy from "lodash/sortBy";
+
 import {
     Component,
     Ref,
@@ -315,7 +318,10 @@ export default class ConversationDialog extends Vue {
     }
 
     private get messages() {
-        return this.$store.conversations.find(c => c.id === this.model.conversation?.id)?.messages || [];
+        return sortBy(
+            this.$store.conversations.find(c => c.id === this.model.conversation?.id)?.messages || [],
+            o => o.sentOn.toMillis(),
+        );
     }
 
     private get transactions() {
@@ -437,6 +443,11 @@ $chat-message-offset: 64px;
     margin-right: $chat-message-offset;
 }
 
+.chat-message.special {
+    border: 1px dashed $secondary-color;
+    background-color: lighten($success-color, 42%);
+}
+
 .chat-message-date.self {
     text-align: right;
     margin-right: 48px;
@@ -447,12 +458,12 @@ $chat-message-offset: 64px;
     margin-left: 48px;
 }
 
-.chat-message-gift.self {
+.chat-message-money-transfer.self {
     text-align: right;
     margin-right: 48px;
 }
 
-.chat-message-gift.other {
+.chat-message-money-transfer.other {
     text-align: left;
     margin-left: 48px;
 }
