@@ -154,7 +154,12 @@
                         <v-col cols="12"
                                class="px-5 my-2">
                             <strong>Rapyd</strong>
-                            Sponsored Content (example)
+                            Hack The Galaxy III is on it's way!
+                            <a href="https://htg3.devpost.com" target="_blank">Click here to learn more and join!</a>
+                        </v-col>
+                        <v-col cols="12"
+                               class="mt-6 mb-4 px-5">
+                            <v-divider v-if="feedIndex < feed.length - 1" />
                         </v-col>
                     </v-row>
                 </v-col>

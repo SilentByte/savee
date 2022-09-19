@@ -59,7 +59,8 @@ function pw(password: string): string {
     return bcrypt.hashSync(password, 10);
 }
 
-const now = DateTime.now().toISO() as Timestamp;
+const nowDt = DateTime.now();
+const now = nowDt.toISO() as Timestamp;
 
 const fixtures: IData = {
     products: {
@@ -74,14 +75,14 @@ const fixtures: IData = {
             currency: "USD",
             description: "These are some fancy shoes! 🥾",
             likeCounter: 283,
-            isLiked: false,
-            isBookmarked: false,
-            createdOn: now,
+            isLiked: true,
+            isBookmarked: true,
+            createdOn: nowDt.toISO() as Timestamp,
         }),
 
         ...o<IProductRecord>("d303ff54-f3d4-49a9-8193-76e0cb7cb60d", {
             name: "Hat Collection",
-            providerId: "00000000-0000-0000-0000-85ae086067e9" as Uuid,
+            providerId: "00000000-0000-0000-0000-7ae9d0bfc8d7" as Uuid,
             contentUrls: [
                 "https://rab-stuff.web.app/savee/content/hat-video.mp4",
                 "https://images.unsplash.com/photo-1566333450073-4638cdc76e18?auto=format&fit=crop&w=1080&q=80",
@@ -92,9 +93,46 @@ const fixtures: IData = {
             currency: "USD",
             description: "Introducing the newest members in our hat collection.",
             likeCounter: 54,
+            isLiked: true,
+            isBookmarked: false,
+            createdOn: nowDt.minus({seconds: 28}).toISO() as Timestamp,
+        }),
+
+        ...o<IProductRecord>("d3ff2888-3b01-4d78-8cd5-1c74cda1cf8a", {
+            name: "Candle Boutique",
+            providerId: "00000000-0000-0000-0000-041086f9b566" as Uuid,
+            contentUrls: [
+                "https://rab-stuff.web.app/savee/content/candles/1.jpg",
+                "https://rab-stuff.web.app/savee/content/candles/2.jpg",
+                "https://rab-stuff.web.app/savee/content/candles/3.jpg",
+                "https://rab-stuff.web.app/savee/content/candles/4.jpg",
+            ],
+            price: 16,
+            currency: "USD",
+            description: "Check out our new candle series, making your home even cozier! Like orange, lavender, or chocolate? No matter your preference, we've got you covered. 🕯️",
+            likeCounter: 92,
             isLiked: false,
             isBookmarked: false,
-            createdOn: now,
+            createdOn: nowDt.minus({seconds: 192}).toISO() as Timestamp,
+        }),
+
+        ...o<IProductRecord>("53da18bb-2725-442c-86cb-8f2d7b67c171", {
+            name: "Cafe Matteo",
+            providerId: "00000000-0000-0000-0000-33e7b9ba9105" as Uuid,
+            contentUrls: [
+                "https://rab-stuff.web.app/savee/content/coffee/1.jpg",
+                "https://rab-stuff.web.app/savee/content/coffee/2.jpg",
+                "https://rab-stuff.web.app/savee/content/coffee/3.jpg",
+                "https://rab-stuff.web.app/savee/content/coffee/4.jpg",
+                "https://rab-stuff.web.app/savee/content/coffee/5.jpg",
+            ],
+            price: 3.90,
+            currency: "USD",
+            description: "We welcome you at Cafe Matteo! ☕🍰 Treat yourself with a cup of luxury coffee from one of our friendly baristas.️",
+            likeCounter: 224,
+            isLiked: false,
+            isBookmarked: false,
+            createdOn: nowDt.minus({seconds: 290}).toISO() as Timestamp,
         }),
     },
     accounts: {
@@ -138,12 +176,12 @@ const fixtures: IData = {
             createdOn: now,
         }),
 
-        ...o<IAccountRecord>("c5fda09b-18a8-4e4b-8514-041086f9b566", {
+        ...o<IAccountRecord>("00000000-0000-0000-0000-041086f9b566", {
             email: "stephanie@example.com",
             avatarUrl: av(1005),
             walletId: "????",
             hashedPassword: pw("stephanie"),
-            displayName: "Stephanie Williams",
+            displayName: "Candle Boutique",
             payments: [],
             createdOn: now,
         }),
@@ -153,7 +191,7 @@ const fixtures: IData = {
             avatarUrl: av(1006),
             walletId: "????",
             hashedPassword: pw("maria"),
-            displayName: "Maria Brown",
+            displayName: "Hat Heaven",
             payments: [],
             createdOn: now,
         }),
@@ -163,7 +201,7 @@ const fixtures: IData = {
             avatarUrl: av(1008),
             walletId: "????",
             hashedPassword: pw("charlie"),
-            displayName: "Charlie B.",
+            displayName: "Cafe Matteo",
             payments: [],
             createdOn: now,
         }),
