@@ -144,7 +144,7 @@
                            icon
                            class="ms-1"
                            color="primary"
-                           @click="onTransferMoney">
+                           @click="onShowTransferMoneyDialog">
                         <v-icon>mdi-currency-usd</v-icon>
                     </v-btn>
                 </v-scroll-x-reverse-transition>
@@ -154,7 +154,7 @@
         <v-dialog v-if="model.conversation"
                   fullscreen hide-overlay
                   transition="dialog-bottom-transition"
-                  v-model="transactionHistoryVisible">
+                  v-model="transactionHistoryDialogVisible">
             <v-card>
                 <v-toolbar dark
                            color="primary">
@@ -192,6 +192,55 @@
                         </v-list-item-action-text>
                     </v-list-item>
                 </v-list>
+            </v-card>
+        </v-dialog>
+
+        <v-dialog v-if="model.conversation"
+                  v-model="transferMoneyDialogVisible">
+            <v-card>
+                <v-container>
+                    <v-form v-model="transferMoneyDialogForm">
+                        <v-row dense>
+                            <v-col cols="12">
+                                <v-subheader class="px-1">
+                                    Send money to {{ $store.users[model.conversation.recipientId]?.displayName }}
+                                </v-subheader>
+                            </v-col>
+
+                            <v-col cols="12">
+                                <v-text-field dense outlined hide-details
+                                              type="number"
+                                              label="Amount"
+                                              v-model="transferMoneyDialogAmount"
+                                              :rules="transferMoneyDialogAmountRules" />
+                            </v-col>
+                            <v-col cols="12">
+                                <v-select dense outlined hide-details
+                                          type="number"
+                                          label="Currency"
+                                          item-value="currency"
+                                          item-text="currency"
+                                          v-model="transferMoneyDialogCurrency"
+                                          :items="wallets" />
+                            </v-col>
+                            <v-col cols="12">
+                                <v-text-field dense outlined hide-details
+                                              label="Message"
+                                              v-model="transferMoneyDialogMessage"
+                                              :rules="transferMoneyDialogMessageRules" />
+                            </v-col>
+                            <v-col cols="12">
+                                <v-btn large depressed block
+                                       color="primary"
+                                       :disabled="!transferMoneyDialogForm"
+                                       :loading="transferMoneyDialogSending"
+                                       @click="onTransferMoney">
+                                    Send Money
+                                </v-btn>
+                            </v-col>
+                        </v-row>
+                    </v-form>
+                </v-container>
             </v-card>
         </v-dialog>
     </v-dialog>
@@ -232,7 +281,21 @@ export default class ConversationDialog extends Vue {
 
     private visible = false;
     private model = defaultModel();
-    private transactionHistoryVisible = false;
+    private transactionHistoryDialogVisible = false;
+    private transferMoneyDialogVisible = false;
+    private transferMoneyDialogForm = false;
+    private transferMoneyDialogCurrency = this.wallets[0]?.currency || "USD";
+    private transferMoneyDialogAmount: number | null = null;
+    private transferMoneyDialogMessage = "";
+    private transferMoneyDialogSending = false;
+
+    private transferMoneyDialogAmountRules = [
+        (v: string) => /\d+(\.\d*)?/.test(v) || "Please enter a valid amount",
+    ];
+
+    private transferMoneyDialogMessageRules = [
+        (v: string) => !!v || "Please enter a message",
+    ];
 
     private get canSendMessage() {
         return !!this.model.typedMessage.trim();
@@ -246,6 +309,8 @@ export default class ConversationDialog extends Vue {
         return Object.entries(this.$store.profile?.walletBalances || {}).map(e => ({
             id: e[0],
             text: this.$format.money(e[0], e[1], {decimals: 2}),
+            currency: e[0],
+            balance: e[1],
         }));
     }
 
@@ -296,11 +361,11 @@ export default class ConversationDialog extends Vue {
     }
 
     private onShowTransactionHistory() {
-        this.transactionHistoryVisible = true;
+        this.transactionHistoryDialogVisible = true;
     }
 
     private onCloseTransactionHistory() {
-        this.transactionHistoryVisible = false;
+        this.transactionHistoryDialogVisible = false;
     }
 
     private onSendMessage() {
@@ -312,13 +377,27 @@ export default class ConversationDialog extends Vue {
         this.scrollToBottom();
     }
 
+    private onShowTransferMoneyDialog() {
+        this.transferMoneyDialogVisible = true;
+        this.transferMoneyDialogForm = false;
+        this.transferMoneyDialogCurrency = this.wallets[0]?.currency || "USD";
+        this.transferMoneyDialogAmount = null;
+        this.transferMoneyDialogMessage = "";
+    }
+
     private async onTransferMoney() {
-        await this.$store.transferMoney({
-            recipientId: this.model.conversation!.recipientId,
-            currency: "USD",
-            amount: 10,
-            text: "this is a test",
-        });
+        try {
+            this.transferMoneyDialogSending = true;
+            await this.$store.transferMoney({
+                recipientId: this.model.conversation!.recipientId,
+                currency: this.transferMoneyDialogCurrency,
+                amount: this.transferMoneyDialogAmount!,
+                text: this.transferMoneyDialogMessage,
+            });
+        } finally {
+            this.transferMoneyDialogSending = false;
+            this.transferMoneyDialogVisible = false;
+        }
     }
 
     @Watch("$store.conversations", {deep: true})
