@@ -10,7 +10,8 @@
         <v-card v-if="model.conversation"
                 class="dialog-body">
             <v-toolbar dark
-                       color="primary">
+                       color="primary"
+                       style="z-index: 10">
                 <v-btn icon
                        @click="onClose">
                     <v-icon>mdi-arrow-left</v-icon>
@@ -39,7 +40,7 @@
                         </v-btn>
                     </template>
                     <v-list>
-                        <v-list-item @click="onViewTransactionHistory">
+                        <v-list-item @click="onShowTransactionHistory">
                             <v-list-item-title>Transaction History</v-list-item-title>
                         </v-list-item>
                     </v-list>
@@ -149,6 +150,50 @@
                 </v-scroll-x-reverse-transition>
             </v-card-actions>
         </v-card>
+
+        <v-dialog v-if="model.conversation"
+                  fullscreen hide-overlay
+                  transition="dialog-bottom-transition"
+                  v-model="transactionHistoryVisible">
+            <v-card>
+                <v-toolbar dark
+                           color="primary">
+                    <v-btn icon
+                           @click="onCloseTransactionHistory">
+                        <v-icon>mdi-arrow-left</v-icon>
+                    </v-btn>
+
+                    <v-toolbar-title>
+                        Transaction History
+                    </v-toolbar-title>
+                </v-toolbar>
+                <v-list two-line subheader>
+                    <v-subheader>
+                        Transactions with
+                        {{ $store.users[model.conversation.recipientId]?.displayName }}
+                    </v-subheader>
+                    <v-list-item v-for="t in transactions" :key="t.id">
+                        <v-list-item-avatar v-if="isMessageFromSelf(t)">
+                            <v-icon color="error">mdi-minus-thick</v-icon>
+                        </v-list-item-avatar>
+                        <v-list-item-avatar v-else>
+                            <v-icon color="success">mdi-plus-thick</v-icon>
+                        </v-list-item-avatar>
+                        <v-list-item-content>
+                            <v-list-item-title>
+                                {{ $format.money(t.currency, t.amount, {decimals: 2}) }}
+                            </v-list-item-title>
+                            <v-list-item-subtitle>
+                                {{ t.text }}
+                            </v-list-item-subtitle>
+                        </v-list-item-content>
+                        <v-list-item-action-text>
+                            {{ t.sentOn.toLocaleString() }}
+                        </v-list-item-action-text>
+                    </v-list-item>
+                </v-list>
+            </v-card>
+        </v-dialog>
     </v-dialog>
 </template>
 
@@ -187,6 +232,7 @@ export default class ConversationDialog extends Vue {
 
     private visible = false;
     private model = defaultModel();
+    private transactionHistoryVisible = false;
 
     private get canSendMessage() {
         return !!this.model.typedMessage.trim();
@@ -205,6 +251,10 @@ export default class ConversationDialog extends Vue {
 
     private get messages() {
         return this.$store.conversations.find(c => c.id === this.model.conversation?.id)?.messages || [];
+    }
+
+    private get transactions() {
+        return this.messages.filter(m => m.type === "money-transfer");
     }
 
     private isMessageFromSelf(message: IMessage) {
@@ -245,9 +295,12 @@ export default class ConversationDialog extends Vue {
         this.visible = false;
     }
 
-    private onViewTransactionHistory() {
-        // TODO: IMPLEMENT.
-        //       Show summary of all 'money-transfer' messages.
+    private onShowTransactionHistory() {
+        this.transactionHistoryVisible = true;
+    }
+
+    private onCloseTransactionHistory() {
+        this.transactionHistoryVisible = false;
     }
 
     private onSendMessage() {

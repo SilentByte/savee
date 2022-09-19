@@ -26,10 +26,6 @@ import * as fixture from "../../../server/db.json";
 
 const USER_ID = "00000000-0000-0000-0000-ad930cca741a";
 
-function hint<T>(o: T): T {
-    return o;
-}
-
 function contactFromFixture(o: any): IContact {
     return {
         id: o.id as Uuid,
