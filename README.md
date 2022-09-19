@@ -88,3 +88,50 @@ There are several features we would like to spend more time on implementing:
 * Crypto Wallets?
 
 Given that this is a Super App, the potential for adding features is basically endless!
+
+
+## Development & Building
+
+To build and run this project, you need to install NodeJS. NodeJS is available [here](https://nodejs.org/en/). You will also need to install [Yarn](https://yarnpkg.com).
+
+
+### Front-End
+
+The front-end is a Vue project. Before you can build and run it, all environment variables specified in the `.env` file must be set correctly. These are:
+
+```bash
+VUE_APP_FIREBASE_API_KEY=
+VUE_APP_FIREBASE_AUTH_DOMAIN=
+VUE_APP_FIREBASE_PROJECT_ID=
+VUE_APP_FIREBASE_STORAGE_BUCKET=
+VUE_APP_FIREBASE_MESSAGING_SENDER_ID=
+VUE_APP_FIREBASE_APP_ID=
+```
+
+You will receive these values when setting up your Firebase project. Follow the instructions [here](https://firebase.google.com).
+
+Once you have set up and configured Firebase, simply navigate into the `app` folder and run the following commands to start up an interactive development build:
+
+
+```bash
+yarn install
+yarn dev
+```
+
+To build a release version of the project, run:
+
+```bash
+yarn install
+yarn build
+```
+
+### Back-End
+
+The back-end is a Firebase project using Firestore and Firebase Functions. The source code is located in the `api/functions` folder. Create the file `api/functions/src/secrets.ts` with the following content (use your Rapyd access keys which you will get after signing up):
+
+```typescript
+export const RAPYD_SECRET_KEY = "YOUR_SECRET_KEY";
+export const RAPYD_ACCESS_KEY = "YOUR_ACCESS_KEY";
+```
+
+To build and deploy the entire project, simply navigate into the root folder of this repository and run `bash deploy.sh`.
